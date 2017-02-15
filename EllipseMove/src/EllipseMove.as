@@ -14,11 +14,14 @@ package {
 		private const ELLIPSE_CENTER_X:int = 250;
 		private const ELLIPSE_CENTER_Y:int = 200;
 		private var rotateKey:Boolean;
+		private var spLine:Sprite;
 
 		public function EllipseMove() {
 
 			rotateKey = true;
 			rectArr = [];
+			spLine = new Sprite();
+			addChild(spLine);
 
 			for (var i:int = 0; i < 8; i++) {
 				var rect:Rect = new Rect();
@@ -38,6 +41,7 @@ package {
 			if (!rotateKey) {
 				return;
 			}
+			spLine.graphics.clear();
 			for (var i:int = 0; i < rectArr.length; i++) {
 				var an:Number = Rect(rectArr[i]).angle
 				an = an + addSize > 360 ? an + addSize - 360 : an + addSize;
@@ -49,6 +53,9 @@ package {
 		private function setPosByAngle(sp:DisplayObject, angle:int):void {
 			sp.x = ELLIPSE_CENTER_X + ELLIPSE_W * Math.sin(angle / 180 * Math.PI);
 			sp.y = ELLIPSE_CENTER_Y + ELLIPSE_H * Math.cos(angle / 180 * Math.PI);
+			spLine.graphics.lineStyle(1, 0x000000);
+			spLine.graphics.moveTo(ELLIPSE_CENTER_X, ELLIPSE_CENTER_Y);
+			spLine.graphics.lineTo(sp.x, sp.y);
 		}
 		
 		private function onOver(evt:MouseEvent):void {
@@ -60,6 +67,7 @@ package {
 		}
 	}
 }
+
 import flash.display.Sprite;
 import flash.text.TextField;
 
@@ -79,7 +87,8 @@ class Rect extends Sprite {
 		rect.graphics.drawRect(0, 0, 40, 40);
 		con.addChild(rect);
 		rect.x = -rect.width / 2;
-
+		rect.y = -rect.height / 2;
+		
 		txt = new TextField();
 //		con.addChild(txt);
 	}
@@ -92,8 +101,9 @@ class Rect extends Sprite {
 	public function set angle(value:Number):void {
 		_angle = value;
 		var scale:Number = Math.pow(Math.abs(_angle / 360 - 0.5), 2) * 2;
-		rect.scaleX = rect.scaleY = 0.5 + scale;
-		rect.alpha = 0.5 + scale;
+		rect.alpha = 0.8 + scale;
+		this.scaleX = this.scaleY = 0.5 + scale;
+		this.rotationY = -_angle;
 //		txt.htmlText = scale + "";
 	}
 }
