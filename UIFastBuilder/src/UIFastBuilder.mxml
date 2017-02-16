@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="1280"
+					   height="720"
+					   applicationComplete="init(event)">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.ConfigManager;
+			import com.Dispatcher;
+			import com.GameConfig;
+			import com.KeyboardManager;
+			import com.MapManager;
+			import com.ModuleComand;
+			import com.NetManager;
+			import com.ResourceManager;
+			import com.Style;
+			import com.component.Scale9Bitmap;
+			import com.element.ElementCodeOutput;
+			import com.element.ElementGenerator;
+			import com.element.ElementManager;
+			
+			import mx.containers.Canvas;
+			import mx.controls.Alert;
+			import mx.core.DragSource;
+			import mx.events.DragEvent;
+			import mx.events.FlexEvent;
+			import mx.graphics.codec.PNGEncoder;
+			import mx.managers.DragManager;
+			import mx.utils.ObjectUtil;
+			
+			import spark.components.supportClasses.ItemRenderer;
+			import spark.primitives.BitmapImage;
+
+			private var imgFile:FileReference;
+			private var fileRefer:FileReference = new FileReference();
+			private var imggs:FileFilter = new FileFilter("选择图片", "*.jpg;*.gif;*.png");
+			private var loader:Loader;
+			private var file:File;
+			/**当前缩放比例*/
+			private var currentScale:Number;
+			private var panelWidth:int = 600;
+			private var panelHeight:int = 420;
+			private var panelBg:Scale9Bitmap;
+			private var panelRect:Scale9Bitmap;
+			private var titleBg:BitmapImage;
+
+			private function init(e:Event):void {
+				keyBoardManager.initListener(this.stage, [importMap, exportMap, importEles, showMap]);
+				eleManager.initLayer(this.stage, eleLayer, warnLayer, InfoBorder, dragContainer, dropContainer);
+				initWindow();
+				txtWindowWidth.addEventListener(FlexEvent.ENTER, setWindow);
+				txtWindowHeight.addEventListener(FlexEvent.ENTER, setWindow);
+				elementList.dataProvider = ElementGenerator.eleConfig;
+				Dispatcher.register(ModuleComand.SET_WINDOW, setWindowSize);
+			}
+
+			private function initWindow():void {
+				if (!ResourceManager.getInstance().hasRes(GameConfig.COMMON)) {
+					ResourceManager.getInstance().loadRes(GameConfig.COMMON, initWindow);
+					trace("正在加载资源：" + "common.swf");
+					return;
+				}
+				panelBg = Style.getScaleBitmap("panelSkin", GameConfig.COMMON, 600, 420, new Rectangle(120, 40, 1, 1), mapLayer, -7, -35);
+				panelRect = Style.getScaleBitmap("panelBg1", GameConfig.COMMON, 584, 370, new Rectangle(5, 5, 2, 2), mapLayer, 1, 5);
+				titleBg = Style.getBitmapImage("panelTitleBg", GameConfig.COMMON, mapLayer, 180, -35);
+			}
+
+			/**设置窗口*/
+			public function setWindow(e:Event = null):void {
+				if (int(txtWindowWidth.text) <= 0 || int(txtWindowHeight.text) <= 0) {
+					return;
+				}
+				MapManager.getInstance().MAP_WIDTH = int(txtWindowWidth.text);
+				MapManager.getInstance().MAP_HEIGHT = int(txtWindowHeight.text);
+				setWindowSize();
+			}
+			
+			/**设置窗口尺寸*/
+			public function setWindowSize():void {
+				panelWidth = MapManager.getInstance().MAP_WIDTH;
+				panelHeight = MapManager.getInstance().MAP_HEIGHT;
+				txtWindowWidth.text = panelWidth + "";
+				txtWindowHeight.text = panelHeight + "";
+				
+				panelBg.width = panelWidth;
+				panelBg.height = panelHeight;
+				panelRect.width = panelWidth - 16;
+				panelRect.height = panelHeight - (checkTab.selected ? 73 : 50);
+				panelRect.y = checkTab.selected ? 28 : 8;
+				titleBg.x = panelWidth - titleBg.width >> 1;
+			}
+
+			private function clickElement(e:MouseEvent):void {
+				var item:ItemRenderer = List(e.currentTarget).selectedItem as ItemRenderer;
+				if (item) {
+					preImage.source = Style.getBitmap(item.data.type as String, GameConfig.COMMON);
+				}
+			}
+
+			private function beginDrag(e:MouseEvent):void {
+				var item:ItemRenderer = List(e.currentTarget).selectedItem as ItemRenderer;
+				if (item) {
+					var ds:DragSource = new DragSource();
+					ds.addData(item, "dragSource");
+					DragManager.doDrag(item, ds, e);
+				}
+			}
+
+			/**滚轮缩放元素*/
+			private function zoomEleByWheel(e:MouseEvent):void {
+				ElementManager.getInstance().zoomCurrentEle(e.delta, e.ctrlKey, e.shiftKey);
+			}
+
+			/**缩放地图*/
+			private function zoomMap(zoomStep:Number):void {
+				currentScale += zoomStep;
+				if (currentScale < 0.1) {
+					currentScale = 0.1
+				} else if (currentScale > 1) {
+					currentScale = 1;
+				}
+				container.scaleX = container.scaleY = currentScale;
+			}
+
+			/**重定位容器*/
+			private function rePositionContainer():void {
+				container.scaleX = container.scaleY = currentScale = 1;
+				container.x = mapCanvas.width / 2 - mapManager.MAP_WIDTH / 2;
+				container.y = mapCanvas.height / 2 - mapManager.MAP_HEIGHT / 2;
+			}
+
+			private function acceptDrag(e:DragEvent):void {
+				var container:Canvas = e.currentTarget as Canvas;
+				DragManager.acceptDragDrop(container);
+			}
+
+			/**
+			 * 从库列表中拖动到舞台上，直接生成
+			 * commonData:坐标来自舞台，实例名eleName由组件类型决定，有的组件不给实例名，详见
+			 * typeData:来自拖动item的data
+			 *
+			 */
+			private function completeDrag(e:DragEvent):void {
+				var dragTarget:ItemRenderer = e.dragSource.dataForFormat("dragSource") as ItemRenderer;
+				eleManager.addEle({commonData:{eleName:ElementCodeOutput.getSampleNameByType(dragTarget.data.type),
+							pos:eleLayer.globalToLocal(new Point(e.stageX, e.stageY))},
+						typeData:ObjectUtil.clone(dragTarget.data)});
+			}
+
+			public static function copy(value:Object):Object {
+				var buffer:ByteArray = new ByteArray();
+				buffer.writeObject(value);
+				buffer.position = 0;
+				var result:Object = buffer.readObject();
+				return result;
+			}
+
+			/**拖动容器*/
+			private function dragContainer(e:MouseEvent):void {
+				container.startDrag();
+			}
+
+			/**松开容器*/
+			private function dropContainer(e:MouseEvent):void {
+				container.stopDrag();
+			}
+
+			private function onCanvasUpdate(e:Event):void {
+			}
+
+			/**导入元素*/
+			private function importEles():void {
+				/* if (!mapManager.isMapLoaded) {
+					Alert.show("请先载入地图在导入元素!", "警告");
+					return;
+				} */
+				file = new File();
+				file.addEventListener(FileListEvent.SELECT_MULTIPLE, multiSelected);
+				file.browseForOpenMultiple("选择图片元素");
+			}
+
+			/**多选文件导入*/
+			private function multiSelected(e:FileListEvent):void {
+				var fileArr:Array = e.files;
+				eleManager.addEleLib(fileArr);
+				elementList.dataProvider = eleManager.eleLibData;
+			}
+
+			/**解析元素名称*/
+			private function analyEleName(str:String):String {
+				var arr:Array = str.split("\\");
+				return String(arr[arr.length - 1]);
+			}
+
+			/**导入地图*/
+			private function importMap():void {
+				imgFile = new FileReference();
+				imgFile.addEventListener(Event.SELECT, doLoad);
+				imgFile.browse();
+			}
+
+			/**加载*/
+			private function doLoad(evt:Event):void {
+				if (imgFile.type != ".jpg") {
+					Alert.show("地图仅支持JPG格式图片", "警告");
+					return;
+				}
+				imgFile.addEventListener(Event.COMPLETE, doComplete);
+				imgFile.load();
+				mapManager.MAP_NAME = imgFile.name.split(".")[0];
+			}
+
+			/**加载地图图像内容*/
+			private function doComplete(evt:Event):void {
+				loader = new Loader();
+				loader.loadBytes(imgFile.data);
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
+			}
+
+			protected function onLoadComplete(evt:Event):void {
+				var tempData:BitmapData = new BitmapData(loader.width, loader.height);
+				tempData.draw(loader);
+				var bitmap:Bitmap = new Bitmap(tempData);
+				currentScale = 1;
+				mapImage.width = mapManager.MAP_WIDTH = loader.width;
+				mapImage.height = mapManager.MAP_HEIGHT = loader.height;
+//				netManager.setMapParameter(mapManager.MAP_WIDTH, mapManager.MAP_HEIGHT);
+				mapImage.source = bitmap;
+				rePositionContainer();
+			}
+
+			/**显示地图*/
+			private function showMap():void {
+				if (!mapManager.isMapLoaded) {
+					Alert.show("请先载入地图!", "警告");
+					return;
+				}
+				mapLayer.visible = !mapLayer.visible;
+			}
+
+			/**显示网格*/
+			private function showNet(e:MouseEvent):void {
+				if (!mapManager.isMapLoaded) {
+					Alert.show("请先载入地图!", "警告");
+					return;
+				}
+			}
+
+			/**显示元素*/
+			private function showEle(e:MouseEvent):void {
+				if (!mapManager.isMapLoaded) {
+					Alert.show("请先载入地图!", "警告");
+					return;
+				}
+				eleManager.showEle();
+			}
+
+			/**导出地图*/
+			private function exportMap():void {
+				if (!mapManager.isMapLoaded) {
+					Alert.show("请先载入地图!", "警告");
+					return;
+				}
+				var outMap:Bitmap = new Bitmap();
+				outMap.bitmapData = new BitmapData(mapManager.MAP_WIDTH, mapManager.MAP_HEIGHT);
+				outMap.bitmapData.draw(mapLayer);
+				outMap.bitmapData.draw(eleLayer);
+				var byteArr:ByteArray = new PNGEncoder().encode(outMap.bitmapData);
+				fileRefer.save(byteArr, mapManager.MAP_NAME + ".jpg");
+				fileRefer.addEventListener(Event.COMPLETE, completeHandler);
+			}
+
+			private function completeHandler(event:Event):void {
+				Alert.show("地图打印成功", "提示");
+			}
+
+			/**地图管理*/
+			private function get mapManager():MapManager {
+				return MapManager.getInstance();
+			}
+
+			/**网格管理*/
+			private function get netManager():NetManager {
+				return NetManager.getInstance();
+			}
+
+			/**元素管理*/
+			private function get eleManager():ElementManager {
+				return ElementManager.getInstance();
+			}
+
+			/**键盘管理*/
+			private function get keyBoardManager():KeyboardManager {
+				return KeyboardManager.getInstance();
+			}
+
+			/**定义数据条目显示的内容，在列表控件中，该方法只有一个参数，为当前的数据条目*/
+			private function myDataTipFunction(item:Object):String {
+				return "您查看的内容为:" + item.label + item.data;
+			}
+
+			/**定义滚动条显示的提示内容，该方法包括2个参数，direction为滚动条的方向，position为滚动条离控件顶端的距离*/
+			private function scrollTipFunction(direction:String, position:Number):String {
+				if (direction == "vertical")
+					return "查看剩余条目"
+				else
+					return "";
+			}
+
+			/**显示元素*/
+			private function showExplain(e:MouseEvent):void {
+				Alert.show("Alt + F		导入地图\n" + "Alt + E		导出地图\n" + "Alt + I		导入配置\n" + "Alt + L		导出配置\n" + "Alt + Ctrl + F  导入元素\n" + "1			显示地图\n" + "2			显示网格\n" + "3			显示元素\n" + "Home			置顶\n" + "End			置底\n" + "Page Up		上移\n" + "Page Down	下移\n" + "Ctrl + 左键		选区\n" + "Ctrl + 滚轮		旋转\n" + "Alt + 拖放  		复制\n", "功能说明");
+			}
+
+			protected function exportConfig(event:MouseEvent):void {
+				ConfigManager.getInstance().exportConfig();
+			}
+
+			protected function importConfig(event:MouseEvent):void {
+				ConfigManager.getInstance().importConfig();
+			}
+
+			protected function outputCode(event:MouseEvent):void {
+				ElementCodeOutput.transCode();
+			}
+		]]>
+	</fx:Script>
+	<s:HGroup x="0"
+			  y="0"
+			  width="100%"
+			  height="100%">
+		<s:BorderContainer width="170"
+						   height="100%">
+			<mx:HRule x="2"
+					  bottom="140"
+					  width="100%"
+					  height="8"/>
+			<s:BorderContainer x="0"
+							   y="0"
+							   width="100%"
+							   height="90">
+				<s:Label x="-1"
+						 y="53"
+						 width="42"
+						 height="18"
+						 fontSize="14"
+						 text="宽："
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<s:Label x="52"
+						 y="15"
+						 width="52"
+						 height="22"
+						 fontSize="18"
+						 text="窗口"
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<s:Label x="79"
+						 y="53"
+						 width="42"
+						 height="18"
+						 fontSize="14"
+						 text="高："
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<s:TextInput id="txtWindowWidth"
+							 x="32"
+							 y="48"
+							 width="45"
+							 enabled="true"
+							 text="600"/>
+				<s:TextInput id="txtWindowHeight"
+							 x="114"
+							 y="48"
+							 width="45"
+							 enabled="true"
+							 text="420"/>
+				<s:CheckBox id="checkTab"
+							x="103"
+							y="16"
+							label="Tab"
+							click="setWindow(event)"/>
+			</s:BorderContainer>
+			<s:BorderContainer id="InfoBorder"
+							   x="0"
+							   top="89"
+							   width="100%"
+							   height="350">
+				<s:Label x="95"
+						 y="40"
+						 width="71"
+						 height="18"
+						 fontSize="14"
+						 text="层级："
+						 textAlign="left"
+						 verticalAlign="middle"/>
+				<s:TextInput x="32"
+							 y="38"
+							 width="55"
+							 enabled="true"/>
+				<s:TextInput x="32"
+							 y="78"
+							 width="45"
+							 enabled="true"/>
+				<s:TextInput x="114"
+							 y="78"
+							 width="45"
+							 enabled="true"/>
+				<s:TextInput x="32"
+							 y="124"
+							 width="45"/>
+				<s:TextInput x="114"
+							 y="124"
+							 width="45"/>
+				<s:TextInput x="54"
+							 y="158"
+							 width="102"/>
+				<s:Label x="1"
+						 y="83"
+						 width="42"
+						 height="18"
+						 fontSize="14"
+						 text="X："
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<s:Label x="1"
+						 y="43"
+						 width="42"
+						 height="18"
+						 fontSize="14"
+						 text="名："
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<s:Label x="79"
+						 y="83"
+						 width="42"
+						 height="18"
+						 fontSize="14"
+						 text="Y："
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<s:Label x="54"
+						 y="9"
+						 width="52"
+						 height="22"
+						 fontSize="18"
+						 fontWeight="bold"
+						 text="元素"
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<mx:HRule x="1"
+						  y="110"
+						  width="100%"/>
+				<s:Label x="-1"
+						 y="128"
+						 width="42"
+						 height="18"
+						 fontSize="14"
+						 text="宽："
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<s:Label x="9"
+						 y="163"
+						 width="42"
+						 height="18"
+						 fontSize="14"
+						 text="内容："
+						 textAlign="center"
+						 verticalAlign="top"/>
+				<s:Label x="79"
+						 y="128"
+						 width="42"
+						 height="18"
+						 fontSize="14"
+						 text="高："
+						 textAlign="center"
+						 verticalAlign="top"/>
+			</s:BorderContainer>
+			<s:Button x="88"
+					  y="476"
+					  bottom="204"
+					  width="75"
+					  height="38"
+					  label="置顶"
+					  click="eleManager.upEle(1)"
+					  fontFamily="Arial"
+					  fontSize="16"
+					  fontWeight="normal"/>
+			<s:Button x="88"
+					  y="527"
+					  bottom="153"
+					  width="75"
+					  height="38"
+					  label="置底"
+					  click="eleManager.downEle(1)"
+					  fontFamily="中易黑体"
+					  fontSize="16"
+					  fontWeight="normal"/>
+			<s:Button x="5"
+					  y="476"
+					  bottom="204"
+					  width="75"
+					  height="38"
+					  label="上移"
+					  click="eleManager.upEle()"
+					  fontFamily="中易黑体"
+					  fontSize="16"
+					  fontWeight="normal"/>
+			<s:Button x="5"
+					  y="527"
+					  bottom="153"
+					  width="75"
+					  height="38"
+					  label="下移"
+					  click="eleManager.downEle()"
+					  fontFamily="中易黑体"
+					  fontSize="16"
+					  fontWeight="normal"/>
+			<s:Button x="7"
+					  bottom="53"
+					  width="155"
+					  height="38"
+					  label="导出配置"
+					  click="exportConfig(event)"
+					  fontFamily="中易黑体"
+					  fontSize="16"
+					  fontWeight="normal"/>
+			<s:Button x="7"
+					  bottom="99"
+					  width="155"
+					  height="38"
+					  label="导入配置"
+					  click="importConfig(event)"
+					  fontFamily="中易黑体"
+					  fontSize="16"
+					  fontWeight="normal"/>
+			<s:Button x="7"
+					  bottom="8"
+					  width="155"
+					  height="38"
+					  label="输出代码"
+					  click="outputCode(event)"
+					  fontFamily="中易黑体"
+					  fontSize="16"
+					  fontWeight="normal"/>
+		</s:BorderContainer>
+		<s:VGroup x="0"
+				  y="0"
+				  width="100%"
+				  height="100%">
+			<mx:Canvas id="mapCanvas"
+					   width="100%"
+					   height="100%"
+					   backgroundColor="#EDE5E5"
+					   borderColor="#39749D"
+					   borderStyle="solid"
+					   dragDrop="completeDrag(event)"
+					   dragEnter="acceptDrag(event)"
+					   updateComplete="onCanvasUpdate(event)"
+					   mouseWheel="zoomEleByWheel(event)">
+				<s:Group id="container"
+						 x="90"
+						 y="108"
+						 width="685"
+						 height="464">
+					<s:Group id="mapLayer"
+							 x="0"
+							 y="0"
+							 width="685"
+							 height="464"
+							 rightMouseDown="dragContainer(event)"
+							 rightMouseUp="dropContainer(event)">
+						<s:Image id="mapImage"
+								 x="0"
+								 y="0"
+								 width="664"
+								 height="443"/>
+					</s:Group>
+					<s:Group id="eleLayer"
+							 x="0"
+							 y="0"
+							 width="642"
+							 height="421">
+					</s:Group>
+					<s:Group id="warnLayer"
+							 x="0"
+							 y="0"
+							 width="620"
+							 height="401">
+					</s:Group>
+				</s:Group>
+			</mx:Canvas>
+		</s:VGroup>
+		<s:BorderContainer x="0"
+						   y="0"
+						   width="295"
+						   height="100%"
+						   backgroundColor="#8E8E8E">
+			<s:VGroup x="0"
+					  y="0"
+					  width="100%"
+					  height="100%">
+				<s:Label width="100%"
+						 height="24"
+						 fontSize="18"
+						 text="组件预览"
+						 textAlign="center"
+						 verticalAlign="middle"/>
+				<s:BorderContainer width="100%"
+								   height="238">
+					<s:Image id="preImage"
+							 left="5"
+							 right="5"
+							 top="5"
+							 bottom="5"/>
+				</s:BorderContainer>
+				<s:VGroup width="100%"
+						  height="100%"
+						  paddingBottom="5"
+						  paddingLeft="5"
+						  paddingRight="5"
+						  paddingTop="5">
+					<s:Label width="100%"
+							 height="24"
+							 fontSize="18"
+							 text="组件库"
+							 textAlign="center"
+							 verticalAlign="middle"/>
+					<s:HGroup width="100%"
+							  height="32">
+						<s:TextInput width="100%"
+									 height="28"/>
+						<s:Button width="80"
+								  height="28"
+								  label="搜索"
+								  fontSize="16"/>
+					</s:HGroup>
+					<s:List id="elementList"
+							width="100%"
+							height="100%"
+							labelField="city"
+							mouseDown="beginDrag(event), clickElement(event)"
+							rollOverColor="#80FF00">
+					</s:List>
+				</s:VGroup>
+			</s:VGroup>
+		</s:BorderContainer>
+	</s:HGroup>
+</s:WindowedApplication>
