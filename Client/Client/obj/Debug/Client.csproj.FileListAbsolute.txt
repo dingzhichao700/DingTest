@@ -1,0 +1,12 @@
+F:\CTest\Client\Client\bin\Debug\Client.exe.config
+F:\CTest\Client\Client\obj\Debug\MainWindow.baml
+F:\CTest\Client\Client\obj\Debug\MainWindow.g.cs
+F:\CTest\Client\Client\obj\Debug\App.g.cs
+F:\CTest\Client\Client\obj\Debug\Client_MarkupCompile.cache
+F:\CTest\Client\Client\obj\Debug\Client.g.resources
+F:\CTest\Client\Client\obj\Debug\Client.Properties.Resources.resources
+F:\CTest\Client\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+F:\CTest\Client\Client\bin\Debug\Client.exe
+F:\CTest\Client\Client\bin\Debug\Client.pdb
+F:\CTest\Client\Client\obj\Debug\Client.exe
+F:\CTest\Client\Client\obj\Debug\Client.pdb

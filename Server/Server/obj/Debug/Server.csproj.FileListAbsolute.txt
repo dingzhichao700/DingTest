@@ -1,0 +1,13 @@
+F:\CTest\Server\Server\bin\Debug\Server.exe.config
+F:\CTest\Server\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+F:\CTest\Server\Server\obj\Debug\MainWindow.baml
+F:\CTest\Server\Server\obj\Debug\MainWindow.g.cs
+F:\CTest\Server\Server\obj\Debug\App.g.cs
+F:\CTest\Server\Server\obj\Debug\Server_MarkupCompile.cache
+F:\CTest\Server\Server\obj\Debug\Server.g.resources
+F:\CTest\Server\Server\obj\Debug\Server.Properties.Resources.resources
+F:\CTest\Server\Server\obj\Debug\Server.csproj.GenerateResource.Cache
+F:\CTest\Server\Server\bin\Debug\Server.exe
+F:\CTest\Server\Server\bin\Debug\Server.pdb
+F:\CTest\Server\Server\obj\Debug\Server.exe
+F:\CTest\Server\Server\obj\Debug\Server.pdb
