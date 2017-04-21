@@ -32,8 +32,6 @@ package {
 				rectArr.push(rect);
 			}
 
-			var sp:Sprite = new Sprite();
-			addChild(sp);
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 		}
 
