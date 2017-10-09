@@ -17,7 +17,8 @@
 				file.url = urlStr;
 				
 				var arr:Array = file.getDirectoryListing();
-				file = file.resolvePath("Flashj.txt");
+				dg.dataProvider = arr;
+//				file = file.resolvePath("Flashj.txt");
 			}
 			
 			//File的选择事件
