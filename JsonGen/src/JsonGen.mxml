@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="520" height="420">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			private function importConfig(e:MouseEvent):void {
+				setDataSource();
+			}
+			
+			public function setDataSource():void {
+				var file:File = new File();  
+				file.browseForDirectory("请选择目录");   
+				file.addEventListener(Event.SELECT, dirSelectpd);  
+			}
+			
+			private function dirSelectpd(e:Event):void{   
+				txtDataPath.text = "路径：" + e.target.nativePath;    //绝对路径  
+			}  
+		]]>
+	</fx:Script>
+	<s:Button x="27" y="82" label="按钮" click="importConfig(event)"/>
+	<s:Label id="txtDataPath" x="27" y="111" width="424" height="23" fontFamily="Arial" fontSize="14"
+			 text="路径："/>
+</s:WindowedApplication>

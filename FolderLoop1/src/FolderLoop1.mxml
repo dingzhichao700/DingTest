@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   creationComplete="initWindow(event)" 
+					   title="AIR遍历文件夹">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			private var file:File;
+			protected function initWindow(event:FlexEvent):void {
+				this.removeEventListener(FlexEvent.CREATION_COMPLETE, initWindow);
+				file = new File();
+//				file.addEventListener(Event.SELECT, file_selectHandler);
+				var urlStr:String = "file:///e:/学习/";
+				file.url = urlStr;
+				
+				var arr:Array = file.getDirectoryListing();
+				file = file.resolvePath("Flashj.txt");
+			}
+			
+			//File的选择事件
+			protected function file_selectHandler(event:Event):void {
+				var arr:Array = file.getDirectoryListing();
+				dg.dataProvider = arr;
+				this.status = file.nativePath;
+			}
+			
+			//单击按钮
+			protected function btn_clickHandler(event:MouseEvent):void {
+				file.browseForDirectory("请选择一个文件夹");
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	<s:Button id="btn" label="打开" click="btn_clickHandler(event)"/>
+	<mx:DataGrid id="dg" y="30" width="100%" height="100%">
+		<mx:columns>
+			<mx:DataGridColumn dataField="name" headerText="文件名"/> 
+			<mx:DataGridColumn dataField="creationDate" headerText="创建日期"/>
+			<mx:DataGridColumn dataField="modificationDate" headerText="修改日期"/>
+			<mx:DataGridColumn dataField="isDirectory" headerText="文件夹"/>
+			<mx:DataGridColumn dataField="size" headerText="大小"/>
+			<mx:DataGridColumn dataField="type" headerText="类型"/>
+		</mx:columns>
+	</mx:DataGrid>
+</s:WindowedApplication>
+
