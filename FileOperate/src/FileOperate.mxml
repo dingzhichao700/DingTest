@@ -1,8 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
-					   xmlns:s="library://ns.adobe.com/flex/spark" 
-					   xmlns:mx="library://ns.adobe.com/flex/mx">
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   fontSize="16" >
+	<fx:Script> 
+		<![CDATA[
+			/**
+			 * 只适用于air程序
+			 * 关键是用户所选择的目录或文件都可以得到其绝对路径的
+			 **/
+			import flash.filesystem.File;  
+			import flash.events.FileListEvent;
+			import flash.events.Event;
+			
+			/**
+			 * 选择一个目录
+			 */
+			private function tanDir(titleStr:String):void{
+				var file:File = new File();
+				file.browseForDirectory(titleStr); 
+				file.addEventListener(Event.SELECT, dirSelectpd);
+			}
+			
+			private function dirSelectpd(e:Event):void{ 
+				inputID.text = e.target.nativePath;    //绝对路径
+			} 
+			
+			/**
+			 * 选择一个文件
+			 */
+			private function tanFile(titleStr:String):void{
+				var file:File = new File();
+				file.browseForOpen(titleStr);
+				file.addEventListener(Event.SELECT, fileSelectpd);
+			}  
+			
+			private function fileSelectpd(e:Event):void { 
+				inputID.text = e.target.nativePath;    //绝对路径
+			}
+			
+			/**
+			 * 选择多个文件
+			 */
+			private function tanDuoFile(titleStr:String):void{
+				var file:File = new File();
+				file.browseForOpenMultiple(titleStr);
+				file.addEventListener(FileListEvent.SELECT_MULTIPLE, duoFileSelectpd);
+			}
+			
+			private function duoFileSelectpd(e:FileListEvent):void{
+				var fileArr:Array = e.files;
+				for(var i:uint = 0; i < fileArr.length; i++){
+					trace(fileArr[i].nativePath);    //绝对路径
+				}
+			}
+			
+			/**
+			 * 保存一个文件
+			 */
+			private function tanSave(titleStr:String):void{
+				var file:File = new File();
+				file.browseForSave(titleStr);
+				file.addEventListener(Event.SELECT, selSave);
+			}
+			
+			private function selSave(e:Event):void{
+				var newFile:File = e.target as File;
+				var str:String = inputID.text;    //要写入文件的内容
+				if(!newFile.exists){
+					var stream:FileStream = new FileStream();
+					stream.open(newFile, FileMode.WRITE);
+					stream.writeUTFBytes(str);
+					stream.close();
+				}
+			}
+			
+		]]>
+	</fx:Script>
 	<fx:Declarations>
-		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		
 	</fx:Declarations>
+	
+	<mx:Button id="butDirID" label="选择一个目录" click="tanDir('哈哈，选择一个目录');"/>
+	<mx:Button id="butFileID" y="30" label="选择一个文件" click="tanFile('哈哈，选择一个文件');"/>
+	<mx:Button id="butDuoFileID" y="60" label="选择多个文件" click="tanDuoFile('哈哈，选择多个文件');"/>
+	<mx:Button id="butSaveID" y="90" label="保存一个文件" click="tanSave('哈哈，保存一个文件');"/>
+	
+	<mx:TextInput id="inputID" y="180" width="100%"/>
 </s:WindowedApplication>
+
+

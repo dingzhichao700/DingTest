@@ -2,12 +2,24 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
 					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   width="520" height="420">
-	<fx:Declarations>
+					   width="520" height="420" creationComplete="initWindow(event)">
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			private var so:SharedObject;
+			private var excelPath:String;
+			
+			private function initWindow(event:FlexEvent):void {
+				txtDataPath.text = "Excel路径：";
+				so = SharedObject.getLocal("JsonGenData","/");
+				if(so.data.ExcelPath){
+					excelPath = so.data.ExcelPath.name;
+					txtDataPath.text = "Excel路径：" + excelPath;
+				}
+			}
+			
 			private function importConfig(e:MouseEvent):void {
 				setDataSource();
 			}
@@ -18,12 +30,17 @@
 				file.addEventListener(Event.SELECT, dirSelectpd);  
 			}
 			
-			private function dirSelectpd(e:Event):void{   
-				txtDataPath.text = "路径：" + e.target.nativePath;    //绝对路径  
-			}  
+			private function dirSelectpd(e:Event):void{  
+				excelPath =  e.target.nativePath
+				txtDataPath.text = "Excel路径：" + excelPath;    //绝对路径  
+				var o:Object = new Object();
+				o.name = excelPath;
+				so.data.ExcelPath = o;
+				so.flush();
+			}
 		]]>
 	</fx:Script>
-	<s:Button x="27" y="82" label="按钮" click="importConfig(event)"/>
-	<s:Label id="txtDataPath" x="27" y="111" width="424" height="23" fontFamily="Arial" fontSize="14"
+	<s:Button x="27" y="22" label="选择路径" click="importConfig(event)"/>
+	<s:Label id="txtDataPath" x="28" y="51" width="424" height="23" fontFamily="Arial" fontSize="14"
 			 text="路径："/>
 </s:WindowedApplication>

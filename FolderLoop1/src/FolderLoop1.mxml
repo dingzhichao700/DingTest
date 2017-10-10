@@ -13,11 +13,11 @@
 				this.removeEventListener(FlexEvent.CREATION_COMPLETE, initWindow);
 				file = new File();
 //				file.addEventListener(Event.SELECT, file_selectHandler);
-				var urlStr:String = "file:///e:/学习/";
-				file.url = urlStr;
-				
-				var arr:Array = file.getDirectoryListing();
-				dg.dataProvider = arr;
+//				var urlStr:String = "file:///e:/学习/";
+//				file.url = urlStr;
+//				
+//				var arr:Array = file.getDirectoryListing();
+//				dg.dataProvider = arr;
 //				file = file.resolvePath("Flashj.txt");
 			}
 			
