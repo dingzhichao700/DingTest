@@ -3,6 +3,10 @@
 					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   width="520" height="420" creationComplete="initWindow(event)">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Style source="JsonGen.css"/>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	<fx:Script>
 		<![CDATA[
@@ -10,6 +14,10 @@
 			
 			private var so:SharedObject;
 			private var excelPath:String;
+			private var configPath:String;
+			private var outPath1:String;
+			private var outPath2:String;
+			private var myFileStream:FileStream;
 			
 			private function initWindow(event:FlexEvent):void {
 				txtDataPath.text = "Excel路径：";
@@ -18,29 +26,90 @@
 					excelPath = so.data.ExcelPath.name;
 					txtDataPath.text = "Excel路径：" + excelPath;
 				}
+				if(so.data.ConfigPath){
+					configPath = so.data.ConfigPath.name;
+					txtConfigPath.text = "Config路径：" + configPath;
+					outPath1 = configPath.slice(0, configPath.indexOf("template\clientjs") - String("template\clientjs").length);
+					outPath1 = outPath1 + "out\\clientjs";
+				}
+//				var myFile:File = File.documentsDirectory.resolvePath(outPath1 + "\\all.json");
+//				myFileStream = new FileStream();
+//				myFileStream.addEventListener(Event.COMPLETE, completeHandler);
+//				myFileStream.openAsync(myFile, FileMode.READ);
 			}
 			
-			private function importConfig(e:MouseEvent):void {
-				setDataSource();
+			private function completeHandler(event:Event):void {
+				proBar.label = myFileStream.readMultiByte(myFileStream.bytesAvailable, "iso-8859-1");
 			}
 			
-			public function setDataSource():void {
+			//Excel路径  
+			private function setExcelPath(e:MouseEvent):void {
 				var file:File = new File();  
 				file.browseForDirectory("请选择目录");   
-				file.addEventListener(Event.SELECT, dirSelectpd);  
+				file.addEventListener(Event.SELECT, selectExcel);  
 			}
 			
-			private function dirSelectpd(e:Event):void{  
+			private function selectExcel(e:Event):void{  
 				excelPath =  e.target.nativePath
-				txtDataPath.text = "Excel路径：" + excelPath;    //绝对路径  
+				txtDataPath.text = "Excel路径：" + excelPath;   
 				var o:Object = new Object();
 				o.name = excelPath;
 				so.data.ExcelPath = o;
 				so.flush();
 			}
+			
+			//Config路径  
+			private function setConfigPath(e:MouseEvent):void {
+				var file:File = new File();  
+				file.browseForDirectory("请选择目录");   
+				file.addEventListener(Event.SELECT, selectConfig);  
+			}
+			
+			private function selectConfig(e:Event):void{  
+				configPath =  e.target.nativePath;
+				txtConfigPath.text = "Config路径：" + configPath;
+				var o:Object = new Object();
+				o.name = configPath;
+				so.data.ConfigPath = o;
+				so.flush();
+			}
+			
+			/**生成数据*/
+			private function genData(e:MouseEvent):void {
+				var file:File = new File(outPath1 + "\\all.json");
+				if(file.exists){
+					file.deleteFile();
+				}
+				var fs:FileStream = new FileStream();
+				fs.addEventListener(Event.COMPLETE, onComplete);
+				fs.openAsync(file, FileMode.UPDATE);
+//				file.addEventListener(ProgressEvent.PROGRESS, onproBar);
+//				file.addEventListener(OutputProgressEvent.OUTPUT_PROGRESS, onproBar);
+				var bytes:ByteArray = new ByteArray();
+				for(var i:int = 0;i < 10;i++){
+					bytes.writeUTFBytes((i+1) + ".韩寒韩红何厚铧韩寒韩红何厚铧韩寒韩红何厚铧韩寒韩红何厚铧;\n");
+					fs.writeBytes(bytes);
+				}
+				fs.close();
+			}
+			
+			private function onproBar(e:OutputProgressEvent):void {
+				proBar.setProgress(e.bytesTotal-e.bytesPending, e.bytesTotal);
+				proBar.label = "进度：" + int((e.bytesTotal-e.bytesPending)/e.bytesTotal) + "/100";
+			}
+			
+			private function onComplete(e:Event):void {
+				trace("123");
+			}
+			
 		]]>
 	</fx:Script>
-	<s:Button x="27" y="22" label="选择路径" click="importConfig(event)"/>
-	<s:Label id="txtDataPath" x="28" y="51" width="424" height="23" fontFamily="Arial" fontSize="14"
-			 text="路径："/>
+	<s:Button x="27" y="22" height="28" label="选择路径" click="setExcelPath(event)"/>
+	<s:Button x="27" y="81" height="28" label="选择路径" click="setConfigPath(event)"/>
+	<s:Button x="27" y="140" height="28" label="生成" click="genData(event)"/>
+	<s:Label id="txtDataPath" x="28" y="60" width="424" height="23" fontFamily="Arial" fontSize="14"
+			 text="Excel路径："/>
+	<s:Label id="txtConfigPath" x="28" y="118" width="424" height="23" fontFamily="Arial"
+			 fontSize="14" text="Config路径："/>
+	<mx:ProgressBar id="proBar" x="55" y="316"/>
 </s:WindowedApplication>

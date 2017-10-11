@@ -60,7 +60,8 @@
 			 */
 			private function tanSave(titleStr:String):void{
 				var file:File = new File();
-				file.browseForSave(titleStr);
+				file.nativePath = "E:\\CQTX\\doc\\Excel数据配置";	
+				file.save("hahaha", "allJson.xml");
 				file.addEventListener(Event.SELECT, selSave);
 			}
 			
