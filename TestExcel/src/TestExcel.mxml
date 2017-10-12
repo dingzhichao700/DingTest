@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="600"
+			   height="400"
+			   creationComplete="init(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.as3xls.xls.Cell;
+			import com.as3xls.xls.ExcelFile;
+			import com.as3xls.xls.Sheet;
+			
+			import flash.events.Event;
+			import flash.net.FileFilter;
+			import flash.net.FileReference;
+			import flash.utils.ByteArray;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			
+			private var excelData:ExcelFile;
+			private var fr:FileReference;
+			
+			[Bindable] private var dataList:ArrayCollection;
+			
+			
+			private function init(event:FlexEvent):void {
+				excelData = new ExcelFile();
+				fr = new FileReference();
+				dataList = new ArrayCollection();
+			}
+			
+			private function importXLS(e:MouseEvent):void {
+				var fileFilter:FileFilter = new FileFilter("Excel (.xls)", "*.xls;*.xlsx;");
+				fr.addEventListener(Event.SELECT, selectXLS);
+				fr.browse([fileFilter]);
+			}
+			
+			private function selectXLS(e:Event):void {
+				fr = FileReference(e.target);
+				fr.addEventListener(Event.COMPLETE, fileIn);
+				fr.load();
+			}
+			
+			private function fileIn(e:Event):void {
+				excelData.loadFromByteArray(fr.data);
+				
+				var sheet:Sheet = excelData.sheets[0];
+				var tCols:int = sheet.cols;
+				var tRows:int = sheet.rows;
+				
+				statusLabel.text = excelData.sheets.length + " sheets; " + tCols + " columns; " + tRows + " rows";
+				
+				dataList = new ArrayCollection();
+				
+				for (var i:int = 0; i <= tRows; i++) {
+					var obj:Object = new Object();
+					obj.EventLabel = sheet.getCell(i,0).value;
+					obj.TotalEvents = sheet.getCell(i,1).value;
+					obj.TotalEvents1 = sheet.getCell(i,2).value;
+					obj.TotalEvents2 = sheet.getCell(i,3).value;
+					obj.TotalEvents3 = sheet.getCell(i,4).value;
+					obj.TotalEvents4 = sheet.getCell(i,5).value;
+					obj.TotalEvents5 = sheet.getCell(i,6).value;
+					obj.TotalEvents6 = sheet.getCell(i,7).value;
+					if(obj.EventLabel != ""){
+						dataList.addItem(obj);
+					}
+				}
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<s:Button x="10" y="10" label="Import XLS" click="importXLS(event)"/>
+	
+	<mx:DataGrid dataProvider="{dataList}" x="10" y="39" width="580" height="351">
+		<mx:columns>
+			<mx:DataGridColumn headerText="1" dataField="EventLabel12323"/>
+			<mx:DataGridColumn headerText="2" dataField="TotalEvents" width="140"/>
+			<mx:DataGridColumn headerText="3" dataField="TotalEvents1" width="140"/>
+			<mx:DataGridColumn headerText="Total Events2" dataField="TotalEvents2" width="140"/>
+			<mx:DataGridColumn headerText="Total Events3" dataField="TotalEvents3" width="140"/>
+			<mx:DataGridColumn headerText="Total Events4" dataField="TotalEvents4" width="140"/>
+			<mx:DataGridColumn headerText="Total Events5" dataField="TotalEvents5" width="140"/>
+			<mx:DataGridColumn headerText="Total Events6" dataField="TotalEvents6" width="140"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<s:Label x="99" y="10" width="363" height="22" id="statusLabel" verticalAlign="middle"/>
+	
+	
+</s:WindowedApplication>

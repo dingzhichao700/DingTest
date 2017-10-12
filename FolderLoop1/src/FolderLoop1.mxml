@@ -12,7 +12,7 @@
 			protected function initWindow(event:FlexEvent):void {
 				this.removeEventListener(FlexEvent.CREATION_COMPLETE, initWindow);
 				file = new File();
-//				file.addEventListener(Event.SELECT, file_selectHandler);
+				file.addEventListener(Event.SELECT, file_selectHandler);
 //				var urlStr:String = "file:///e:/学习/";
 //				file.url = urlStr;
 //				

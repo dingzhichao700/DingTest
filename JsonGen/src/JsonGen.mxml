@@ -10,14 +10,24 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	<fx:Script>
 		<![CDATA[
+			import com.as3xls.xls.ExcelFile;
+			import com.as3xls.xls.Sheet;
+			
+			import flash.utils.getTimer;
+			
+			import mx.collections.ArrayCollection;
+			import mx.effects.effectClasses.ZoomInstance;
 			import mx.events.FlexEvent;
 			
 			private var so:SharedObject;
 			private var excelPath:String;
 			private var configPath:String;
 			private var outPath1:String;
-			private var outPath2:String;
+			private var resultObj:Object;
 			private var myFileStream:FileStream;
+			
+			private var excelDic:Dictionary;
+			private var configDic:Dictionary;
 			
 			private function initWindow(event:FlexEvent):void {
 				txtDataPath.text = "Excel路径：";
@@ -32,14 +42,6 @@
 					outPath1 = configPath.slice(0, configPath.indexOf("template\clientjs") - String("template\clientjs").length);
 					outPath1 = outPath1 + "out\\clientjs";
 				}
-//				var myFile:File = File.documentsDirectory.resolvePath(outPath1 + "\\all.json");
-//				myFileStream = new FileStream();
-//				myFileStream.addEventListener(Event.COMPLETE, completeHandler);
-//				myFileStream.openAsync(myFile, FileMode.READ);
-			}
-			
-			private function completeHandler(event:Event):void {
-				proBar.label = myFileStream.readMultiByte(myFileStream.bytesAvailable, "iso-8859-1");
 			}
 			
 			//Excel路径  
@@ -76,32 +78,95 @@
 			
 			/**生成数据*/
 			private function genData(e:MouseEvent):void {
-				var file:File = new File(outPath1 + "\\all.json");
-				if(file.exists){
-					file.deleteFile();
+				var startTime:Number = getTimer();
+				recordConfig();
+				readExcelAndCharge();
+				outPutFile();
+				trace("耗时：" + ((getTimer()-startTime)/1000) + "秒");
+			}
+			
+			/**记录config数据*/
+			private function recordConfig():void {
+				configDic = new Dictionary();
+				var list:Array = new File(configPath).getDirectoryListing();
+				for(var i:int = 0; i<list.length;i++){
+					var arr:Array =	File(list[i]).url.split("/");
+					var name:String = String(arr[arr.length-1]).split(".")[0];
+					configDic[name] = ConfigVO.makeConfig(File(list[i]).nativePath);
+				}
+			}
+			
+			/**遍历读取excel数据，依次对照config检查及填充*/
+			private function readExcelAndCharge():void {
+				/*excel按表结构分个组先*/
+				var arr:Array = new File(excelPath).getDirectoryListing();
+				excelDic = new Dictionary();
+				
+				var excel:ExcelFile;
+				var bytes:ByteArray;
+				var stream:FileStream;
+				var temp:File;
+				var count:int = 0;
+				resultObj = new Object;
+				for (var i:int = 0; i < 2; i++) {
+					/*以一般文件来获取excel文件*/
+					temp = new File(arr[i].nativePath);
+					
+					/*将该excel文件内容流式写入byte数据*/
+					bytes = new ByteArray();
+					stream = new FileStream();
+					stream.open(temp, FileMode.READ);
+					stream.readBytes(bytes);
+					stream.close();
+					temp = null;
+					
+					/*最后以excel文件形式还原出来*/
+					excel = new ExcelFile();
+					excel.loadFromByteArray(bytes);
+					bytes.clear();
+					
+					/*将这个excel文件中的若干张表，按名称查找对应的配置，并生成对应数据*/
+					var list:ArrayCollection = excel.sheets;
+					for(var j:int = 0; j < list.length;j++){
+						var config:ConfigVO = getConfig(Sheet(list[j]).name);
+						if(config){
+							chargeData(list[j], config);
+							count++;
+//							trace(count + ": " + Sheet(list[j]).name);
+						}
+					}
+				}
+			}
+			
+			private function chargeData(sheet:Sheet, config:ConfigVO):void {
+				var data:Object = new Object();
+				data.keyList = config.keyList;
+				resultObj[sheet.name] = data; 
+			}
+			
+			/**输出到文件*/
+			private function outPutFile():void {
+				/**最终输出文件all.json*/
+				var resultFile:File = new File(outPath1 + "\\all.json");
+				if(resultFile.exists){
+					resultFile.deleteFile();
 				}
 				var fs:FileStream = new FileStream();
-				fs.addEventListener(Event.COMPLETE, onComplete);
-				fs.openAsync(file, FileMode.UPDATE);
-//				file.addEventListener(ProgressEvent.PROGRESS, onproBar);
-//				file.addEventListener(OutputProgressEvent.OUTPUT_PROGRESS, onproBar);
+				fs.open(resultFile, FileMode.UPDATE);
+				var str:String = JSON.stringify(resultObj);
 				var bytes:ByteArray = new ByteArray();
-				for(var i:int = 0;i < 10;i++){
-					bytes.writeUTFBytes((i+1) + ".韩寒韩红何厚铧韩寒韩红何厚铧韩寒韩红何厚铧韩寒韩红何厚铧;\n");
-					fs.writeBytes(bytes);
+				bytes.writeUTFBytes(str);
+				fs.writeBytes(bytes);
+				fs.close();  
+			}
+			
+			/**获取某配置*/
+			private function getConfig(name:String):ConfigVO {
+				if(configDic[name]){
+					return configDic[name];
 				}
-				fs.close();
+				return null;
 			}
-			
-			private function onproBar(e:OutputProgressEvent):void {
-				proBar.setProgress(e.bytesTotal-e.bytesPending, e.bytesTotal);
-				proBar.label = "进度：" + int((e.bytesTotal-e.bytesPending)/e.bytesTotal) + "/100";
-			}
-			
-			private function onComplete(e:Event):void {
-				trace("123");
-			}
-			
 		]]>
 	</fx:Script>
 	<s:Button x="27" y="22" height="28" label="选择路径" click="setExcelPath(event)"/>
@@ -111,5 +176,4 @@
 			 text="Excel路径："/>
 	<s:Label id="txtConfigPath" x="28" y="118" width="424" height="23" fontFamily="Arial"
 			 fontSize="14" text="Config路径："/>
-	<mx:ProgressBar id="proBar" x="55" y="316"/>
 </s:WindowedApplication>

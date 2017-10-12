@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   creationComplete="initWindow(event)"
+					   >
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			private var MyFile:FileReference = new FileReference();
+			
+			private function initWindow(event:FlexEvent):void {
+				
+				MyButtonField.x = 150;
+				MyButtonField.height = 20;
+				MyButtonField.text = "Click here to save";
+				
+				MyButtonField.addEventListener(MouseEvent.CLICK, clickhandler);
+			}
+			
+			private function clickhandler(e:MouseEvent): void {
+				MyFile.save(MyTextField.text);
+			}
+		
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:Label id="MyButtonField" x="40" y="89" width="209" height="31" text="标签"/>
+	<s:TextInput id="MyTextField" x="36" y="57"/>
+</s:WindowedApplication>
