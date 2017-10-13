@@ -10,6 +10,7 @@
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	<fx:Script>
 		<![CDATA[
+			import com.as3xls.xls.Cell;
 			import com.as3xls.xls.ExcelFile;
 			import com.as3xls.xls.Sheet;
 			
@@ -23,6 +24,7 @@
 			private var excelPath:String;
 			private var configPath:String;
 			private var outPath1:String;
+			private var outPath2:String;
 			private var resultObj:Object;
 			private var myFileStream:FileStream;
 			
@@ -39,8 +41,10 @@
 				if(so.data.ConfigPath){
 					configPath = so.data.ConfigPath.name;
 					txtConfigPath.text = "Config路径：" + configPath;
-					outPath1 = configPath.slice(0, configPath.indexOf("template\clientjs") - String("template\clientjs").length);
+					outPath1 = configPath.slice(0, configPath.indexOf("template"));
 					outPath1 = outPath1 + "out\\clientjs";
+					outPath2 = configPath.slice(0, configPath.indexOf("tools"));
+					outPath2 = outPath2 + "code\\game\\resource\\assets\\config";
 				}
 			}
 			
@@ -78,11 +82,13 @@
 			
 			/**生成数据*/
 			private function genData(e:MouseEvent):void {
+				txtInfo.text = "开始打包数据：\n";
 				var startTime:Number = getTimer();
 				recordConfig();
 				readExcelAndCharge();
 				outPutFile();
-				trace("耗时：" + ((getTimer()-startTime)/1000) + "秒");
+				var finalFile:File = new File(outPath1 + "\\all.json");
+				txtInfo.appendText("打包并复制完成，文件" + (finalFile.size/1024).toFixed(2) + "kb，耗时 " + ((getTimer() - startTime)/1000) + "秒");
 			}
 			
 			/**记录config数据*/
@@ -102,46 +108,60 @@
 				var arr:Array = new File(excelPath).getDirectoryListing();
 				excelDic = new Dictionary();
 				
-				var excel:ExcelFile;
-				var bytes:ByteArray;
-				var stream:FileStream;
-				var temp:File;
 				var count:int = 0;
 				resultObj = new Object;
-				for (var i:int = 0; i < 2; i++) {
+				for (var i:int = 0; i < arr.length  ; i++) {
 					/*以一般文件来获取excel文件*/
-					temp = new File(arr[i].nativePath);
+					var temp:File = new File(arr[i].nativePath);
 					
 					/*将该excel文件内容流式写入byte数据*/
-					bytes = new ByteArray();
-					stream = new FileStream();
+					var bytes:ByteArray = new ByteArray();
+					var stream:FileStream = new FileStream();
 					stream.open(temp, FileMode.READ);
 					stream.readBytes(bytes);
 					stream.close();
-					temp = null;
 					
 					/*最后以excel文件形式还原出来*/
-					excel = new ExcelFile();
+					var excel:ExcelFile = new ExcelFile();
 					excel.loadFromByteArray(bytes);
-					bytes.clear();
 					
 					/*将这个excel文件中的若干张表，按名称查找对应的配置，并生成对应数据*/
 					var list:ArrayCollection = excel.sheets;
 					for(var j:int = 0; j < list.length;j++){
 						var config:ConfigVO = getConfig(Sheet(list[j]).name);
-						if(config){
+						if(config/*  && Sheet(list[j]).name == "data_activity_client" */){
 							chargeData(list[j], config);
 							count++;
-//							trace(count + ": " + Sheet(list[j]).name);
+							txtInfo.appendText(count + ":" + Sheet(list[j]).name + "\n");
 						}
 					}
 				}
 			}
 			
+			/**填充数据*/
 			private function chargeData(sheet:Sheet, config:ConfigVO):void {
 				var data:Object = new Object();
+				data.dataList = [];
 				data.keyList = config.keyList;
+				
+				for(var i:int = 2; i < sheet.values.length-1; i++) { //flex读excel好像会在最底下多读一行空数据出来，这里length-1
+					var innerList:Array = [];
+					for(var j:int = 0; j < config.attrList.length;j++){
+						var cell:Cell = sheet.getCell(i, findIndex(config.attrList[j].name, sheet.values[0]));
+						innerList.push(config.attrList[j].size == 0 ? int(cell.value) : (cell.value + ""));
+					}
+					data.dataList.push(innerList);
+				}
 				resultObj[sheet.name] = data; 
+			}
+			
+			private function findIndex(name:String, indexData:Array):int {
+				for(var i:int = 0; i < indexData.length;i++){
+					if(Cell(indexData[i]).value == name){
+						return i;
+					}
+				}
+				return 0;
 			}
 			
 			/**输出到文件*/
@@ -158,6 +178,9 @@
 				bytes.writeUTFBytes(str);
 				fs.writeBytes(bytes);
 				fs.close();  
+				
+				var targetFile:File = new File(outPath2 + "/all.json");
+				resultFile.copyTo(targetFile, true);
 			}
 			
 			/**获取某配置*/
@@ -170,10 +193,14 @@
 		]]>
 	</fx:Script>
 	<s:Button x="27" y="22" height="28" label="选择路径" click="setExcelPath(event)"/>
-	<s:Button x="27" y="81" height="28" label="选择路径" click="setConfigPath(event)"/>
-	<s:Button x="27" y="140" height="28" label="生成" click="genData(event)"/>
+	<s:Button x="27" y="88" height="28" label="选择路径" click="setConfigPath(event)"/>
+	<s:Button x="26" y="362" width="77" height="28" label="生成" click="genData(event)"/>
 	<s:Label id="txtDataPath" x="28" y="60" width="424" height="23" fontFamily="Arial" fontSize="14"
 			 text="Excel路径："/>
-	<s:Label id="txtConfigPath" x="28" y="118" width="424" height="23" fontFamily="Arial"
+	<s:Label id="txtConfigPath" x="28" y="124" width="424" height="23" fontFamily="Arial"
 			 fontSize="14" text="Config路径："/>
+	<s:TextArea id="txtInfo" x="26" y="167" width="409" height="177" color="#828282"
+				fontFamily="Arial" fontStyle="normal" fontWeight="normal"
+				prompt="Excel路径：*:\CQTX\doc\Excel数据配置                            Config路径：*:\CQTX\tools\datagen\template\clientjs"
+				skinClass="spark.skins.spark.TextAreaSkin"/>
 </s:WindowedApplication>
