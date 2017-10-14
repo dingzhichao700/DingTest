@@ -129,7 +129,7 @@
 					var list:ArrayCollection = excel.sheets;
 					for(var j:int = 0; j < list.length;j++){
 						var config:ConfigVO = getConfig(Sheet(list[j]).name);
-						if(config/*  && Sheet(list[j]).name == "data_activity_client" */){
+						if(config /*  && Sheet(list[j]).name == "data_wing"  */ ){
 							chargeData(list[j], config);
 							count++;
 							txtInfo.appendText(count + ":" + Sheet(list[j]).name + "\n");
@@ -140,17 +140,22 @@
 			
 			/**填充数据*/
 			private function chargeData(sheet:Sheet, config:ConfigVO):void {
-				var data:Object = new Object();
+				var data:Object = new Object();大师兄
 				data.dataList = [];
 				data.keyList = config.keyList;
 				
-				for(var i:int = 2; i < sheet.values.length-1; i++) { //flex读excel好像会在最底下多读一行空数据出来，这里length-1
+				for(var i:int = 2; i < sheet.rows; i++) { //flex读excel好像会在最底下多读一行空数据出来，这里length-1
 					var innerList:Array = [];
+					/**是否包含空值*/
+					var withinEmpty:Boolean = false;
 					for(var j:int = 0; j < config.attrList.length;j++){
 						var cell:Cell = sheet.getCell(i, findIndex(config.attrList[j].name, sheet.values[0]));
 						innerList.push(config.attrList[j].size == 0 ? int(cell.value) : (cell.value + ""));
+						withinEmpty = String(cell.value) == "";
 					}
-					data.dataList.push(innerList);
+					if(!withinEmpty){
+						data.dataList.push(innerList);
+					}
 				}
 				resultObj[sheet.name] = data; 
 			}
