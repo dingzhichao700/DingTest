@@ -2,7 +2,7 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
 					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   width="520" height="420" creationComplete="initWindow(event)">
+					   width="520" height="420" creationComplete="initWindow(event)" frameRate="60">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
@@ -27,11 +27,20 @@
 			private var outPath2:String;
 			private var resultObj:Object;
 			private var myFileStream:FileStream;
+			private var fileList:Array;
+			private var count:int;
+			private var startTime:int;
+			private var chargeTimer:Timer;
 			
 			private var excelDic:Dictionary;
 			private var configDic:Dictionary;
 			
 			private function initWindow(event:FlexEvent):void {
+//				var fps:Fps = new Fps();
+//				fps.x = 400;
+//				fps.y = 20;
+//				addElement(fps);
+				
 				txtDataPath.text = "Excel路径：";
 				so = SharedObject.getLocal("JsonGenData","/");
 				if(so.data.ExcelPath){
@@ -83,12 +92,9 @@
 			/**生成数据*/
 			private function genData(e:MouseEvent):void {
 				txtInfo.text = "开始打包数据：\n";
-				var startTime:Number = getTimer();
+				startTime = getTimer();
 				recordConfig();
 				readExcelAndCharge();
-				outPutFile();
-				var finalFile:File = new File(outPath1 + "\\all.json");
-				txtInfo.appendText("打包并复制完成，文件" + (finalFile.size/1024).toFixed(2) + "kb，耗时 " + ((getTimer() - startTime)/1000) + "秒");
 			}
 			
 			/**记录config数据*/
@@ -105,14 +111,21 @@
 			/**遍历读取excel数据，依次对照config检查及填充*/
 			private function readExcelAndCharge():void {
 				/*excel按表结构分个组先*/
-				var arr:Array = new File(excelPath).getDirectoryListing();
+				fileList = new File(excelPath).getDirectoryListing();
 				excelDic = new Dictionary();
+				resultObj = new Object();
+				chargeTimer = new Timer(5, 0);
+				chargeTimer.addEventListener(TimerEvent.TIMER, chargeLoop);
+				chargeTimer.start();
 				
-				var count:int = 0;
-				resultObj = new Object;
-				for (var i:int = 0; i < arr.length  ; i++) {
-					/*以一般文件来获取excel文件*/
-					var temp:File = new File(arr[i].nativePath);
+				count = 0;
+			}
+			
+			/**循环加载*/
+			private function chargeLoop(e:TimerEvent):void {
+				/*以一般文件来获取excel文件*/
+				if(fileList.length > 0){
+					var temp:File = new File(fileList.pop().nativePath);
 					
 					/*将该excel文件内容流式写入byte数据*/
 					var bytes:ByteArray = new ByteArray();
@@ -135,16 +148,18 @@
 							txtInfo.appendText(count + ":" + Sheet(list[j]).name + "\n");
 						}
 					}
+				} else{
+					outPutFile();
 				}
 			}
 			
 			/**填充数据*/
 			private function chargeData(sheet:Sheet, config:ConfigVO):void {
-				var data:Object = new Object();大师兄
+				var data:Object = new Object();
 				data.dataList = [];
 				data.keyList = config.keyList;
 				
-				for(var i:int = 2; i < sheet.rows; i++) { //flex读excel好像会在最底下多读一行空数据出来，这里length-1
+				for(var i:int = 2; i < sheet.rows; i++) {
 					var innerList:Array = [];
 					/**是否包含空值*/
 					var withinEmpty:Boolean = false;
@@ -171,6 +186,8 @@
 			
 			/**输出到文件*/
 			private function outPutFile():void {
+				
+				chargeTimer.removeEventListener(TimerEvent.TIMER, chargeLoop);
 				/**最终输出文件all.json*/
 				var resultFile:File = new File(outPath1 + "\\all.json");
 				if(resultFile.exists){
@@ -186,6 +203,8 @@
 				
 				var targetFile:File = new File(outPath2 + "/all.json");
 				resultFile.copyTo(targetFile, true);
+				
+				txtInfo.appendText("打包并复制完成，文件" + (resultFile.size/1024).toFixed(2) + "kb，耗时 " + ((getTimer() - startTime)/1000) + "秒");
 			}
 			
 			/**获取某配置*/
