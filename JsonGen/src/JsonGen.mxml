@@ -162,15 +162,15 @@
 				for(var i:int = 2; i < sheet.rows; i++) {
 					var innerList:Array = [];
 					/**是否包含空值*/
-					var withinEmpty:Boolean = false;
+//					var withinEmpty:Boolean = false;
 					for(var j:int = 0; j < config.attrList.length;j++){
 						var cell:Cell = sheet.getCell(i, findIndex(config.attrList[j].name, sheet.values[0]));
 						innerList.push(config.attrList[j].size == 0 ? int(cell.value) : (cell.value + ""));
-						withinEmpty = String(cell.value) == "";
+//						withinEmpty = String(cell.value) == "";
 					}
-					if(!withinEmpty){
+//					if(!withinEmpty){//2017.11.21 修改成无视空值
 						data.dataList.push(innerList);
-					}
+//					}
 				}
 				resultObj[sheet.name] = data; 
 			}
