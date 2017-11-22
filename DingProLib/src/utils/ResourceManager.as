@@ -51,8 +51,7 @@ package utils {
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadHandler);
 				loadPool[path] = callBack;
 				try {
-					var completeUrl:String = assetUrl + path + "/" + path + ".swf";
-					loader.load(new URLRequest(completeUrl));
+					loader.load(new URLRequest(assetUrl + path + ".swf"));
 				} catch (err:IOErrorEvent) {
 					trace("err: " + err);
 				}

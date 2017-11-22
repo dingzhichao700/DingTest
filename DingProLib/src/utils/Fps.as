@@ -1,4 +1,4 @@
-package
+package utils
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
