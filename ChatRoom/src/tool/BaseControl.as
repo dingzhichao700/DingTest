@@ -1,4 +1,5 @@
-package control {
+package tool  {
+
 	public class BaseControl {
 		public function BaseControl() {
 			this.addEventHandler();
@@ -6,7 +7,7 @@ package control {
 		}
 
 		public function addEventListener(eventName:String, handler:Function):void {
-			EventBus.getInstance().addMsgListener(eventName, handler);
+			GameBus.getInstance().addMsgListener(eventName, handler);
 		}
 
 		protected function addEventHandler():void {
@@ -16,7 +17,7 @@ package control {
 		}
 
 		public function dispatchMsg(msgName:String, ... arg):void {
-			EventBus.getInstance().dispatchMsg(msgName, arg);
+			GameBus.getInstance().dispatchMsg(msgName, arg);
 		}
 	}
 }

@@ -1,17 +1,17 @@
-package control {
+package tool  {
 	import flash.utils.Dictionary;
 
-	public class EventBus {
+	public class GameBus {
 
 		private var eventDic:Dictionary;
-		private static var _instance:EventBus;
+		private static var _instance:GameBus;
 
-		public static function getInstance():EventBus {
-			_instance ||= new EventBus()
+		public static function getInstance():GameBus {
+			_instance ||= new GameBus()
 			return _instance;
 		}
 
-		public function EventBus() {
+		public function GameBus() {
 			eventDic = new Dictionary();
 		}
 
