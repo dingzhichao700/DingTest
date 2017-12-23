@@ -15,7 +15,7 @@ package module {
 		}
 		
 		public function set stage(stage:Stage):void {
-			_stage = stage;
+			this._stage = stage;
 		}
 		
 		public function get stage():Stage {

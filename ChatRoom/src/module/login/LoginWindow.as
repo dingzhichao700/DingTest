@@ -1,13 +1,13 @@
 package module.login {
-	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
-
+	
 	import fl.controls.Button;
 	import fl.controls.TextInput;
-
+	
 	import tool.BaseWindow;
+	
+	import utils.Style;
 
 	public class LoginWindow extends BaseWindow {
 
@@ -37,6 +37,7 @@ package module.login {
 			btn.label = "连接";
 			btn.x = 160;
 			btn.y = 100;
+			Style.getBitmap("heart4", "mainUi", this);
 			btn.addEventListener(MouseEvent.CLICK, onClick);
 			this.addChild(btn);
 		}

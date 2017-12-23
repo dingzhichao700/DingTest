@@ -1,7 +1,6 @@
 package {
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
-	import flash.system.Security;
 	
 	import module.MainModel;
 	
@@ -18,7 +17,6 @@ package {
 
 		public function ChatRoom() {
 			stage.scaleMode = StageScaleMode.NO_SCALE;
-			Security.allowDomain("*");
 			init();
 		}
 
