@@ -92,7 +92,7 @@ package {
 
 		private function forfun(e:TimerEvent):void {
 			_vid.draw(video);
-			output.text = bitmapToAscII(_vid, 3, 8);
+//			output.text = bitmapToAscII(_vid, 3, 8);
 		}
 	}
 }
