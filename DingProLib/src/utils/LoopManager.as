@@ -38,7 +38,7 @@ package utils {
 
 		/**
 		 * 延时执行
-		 * @param time 延时(秒)
+		 * @param time 延时(毫秒)
 		 * @param func 函数
 		 * @param arg 参数
 		 *
@@ -49,7 +49,7 @@ package utils {
 				return 0;
 			}
 			delayKey++;
-			delayDic[delayKey] = {key: delayKey, start: getTimer(), count: deley * 1000, callback: func as Function, arg: args};
+			delayDic[delayKey] = {key: delayKey, start: getTimer(), count: deley, callback: func as Function, arg: args};
 			return delayKey;
 		}
 
