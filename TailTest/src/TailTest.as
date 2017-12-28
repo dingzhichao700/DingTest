@@ -1,7 +1,6 @@
 package {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.SpreadMethod;
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
@@ -9,6 +8,7 @@ package {
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.setTimeout;
 
 	import utils.LoopManager;
 	import utils.ResourceManager;
@@ -20,13 +20,16 @@ package {
 
 		private var res:Bitmap;
 		private var DELAY:int = 1;
-		private var CUT:int = 10;
+		private var CUT:int = 1;
 		private var cutWidth:int;
-		private var REFER_RATE:Number = 0.7;
+		private var dragging:Boolean;
+		private var REFER_RATE:Number = 1;
 		private var resX:int = 50;
 		private var resY:int = 50;
 		private var partList:Array;
 		private var targetSp:Sprite;
+		private var lastPos:Point;
+		private var tailHead:TailPart;
 
 		public function TailTest() {
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -76,13 +79,18 @@ package {
 				var part:TailPart = new TailPart();
 				this.partList.push(part);
 				var bmp:Bitmap = new Bitmap(bmd, "auto", true);
+				bmp.x = -cutWidth / 2;
 				bmp.y = -bmp.height / 2;
 				part.addChild(bmp);
 
 				if(i == 0) {
-					part.addEventListener(MouseEvent.MOUSE_DOWN, onDown);
-					part.addEventListener(MouseEvent.MOUSE_MOVE, onMove);
-					part.addEventListener(MouseEvent.MOUSE_UP, onUp);
+					tailHead = part;
+					tailHead.graphics.beginFill(0xffff00, 0.5);
+					tailHead.graphics.drawCircle(0, 0, 35);
+					tailHead.addEventListener(MouseEvent.MOUSE_DOWN, onDown);
+					this.addEventListener(MouseEvent.MOUSE_MOVE, onMove);
+					this.addEventListener(MouseEvent.MOUSE_UP, onUp);
+//					this.addEventListener(MouseEvent.MOUSE_OUT, onUp);
 				}
 
 				var radius:int = (pixelBottom - pixelTop) / 2;
@@ -97,11 +105,12 @@ package {
 				var copyBmd:BitmapData = new BitmapData(round.x + resCon.width, round.y + resCon.height, true, 0);
 				copyBmd.draw(resCon, new Matrix(1, 0, 0, 1, -resX - (cutWidth) * i, -resY));
 				var copyBmp:Bitmap = new Bitmap(copyBmd, "auto", true);
+				copyBmp.x = -cutWidth / 2;
 				copyBmp.y = -bmp.height / 2;
 				part.addChild(copyBmp);
 				round.graphics.clear();
 
-				part.x = 50 + (cutWidth + 0) * i;
+				part.x = 150 + (cutWidth + 0) * i;
 				part.y = 250 + (0) * i;
 				this.addChildAt(part, 0);
 			}
@@ -109,7 +118,9 @@ package {
 		}
 
 		private function onFrame(e:Event):void {
-			setLine();
+			if(dragging) {
+				setLine();
+			}
 		}
 
 		private function setLine():void {
@@ -119,17 +130,14 @@ package {
 				/*定位点坐标，后一截定位到这个点*/
 				var focusX:int = partList[i - 1].x + Math.cos(Sprite(partList[i - 1]).rotation * Math.PI / 180) * cutWidth;
 				var focusY:int = partList[i - 1].y + Math.sin(Sprite(partList[i - 1]).rotation * Math.PI / 180) * cutWidth;
-				/*参考点坐标，后一截朝向到这个点*/
-				var referX:int = partList[i - 1].x + Math.cos(Sprite(partList[i - 1]).rotation * Math.PI / 180) * cutWidth * REFER_RATE;
-				var referY:int = partList[i - 1].y + Math.sin(Sprite(partList[i - 1]).rotation * Math.PI / 180) * cutWidth * REFER_RATE;
 
-//				targetSp.graphics.drawCircle(focusX, focusY, 5);
+				targetSp.graphics.drawCircle(focusX, focusY, 5);
 				var disX:Number = partList[i].x - focusX * REFER_RATE;
 				var disY:Number = partList[i].y - focusY;
 				var dis:Number = Math.sqrt(disX * disX + disY * disY);
-				var radian:Number = Math.atan2(disY, disX);
-				setPos(partList[i], focusX, focusY, radian * 180 / Math.PI);
-//				LoopManager.doDelay(DELAY, setPos, [partList[i], focusX, focusY, radian * 180 / Math.PI]);
+				var radian:Number = Math.atan2(disY, disX) * 180 / Math.PI;
+				setPos(partList[i], focusX, focusY, radian);
+//				LoopManager.doDelay(DELAY, setPos, [partList[i], focusX, focusY, radian]);
 			}
 		}
 
@@ -140,15 +148,33 @@ package {
 		}
 
 		private function onMove(e:MouseEvent):void {
-//			setLine();
+			if(!dragging) {
+				return;
+			}
+			if(!lastPos) {
+				lastPos = new Point(tailHead.x, tailHead.y);
+			} else {
+				var disX:Number = (lastPos.x - tailHead.x);
+				var disY:Number = (lastPos.y - tailHead.y);
+				var dis:Number = Math.sqrt(disX * disX + disY * disY);
+				var rotate:Number = Math.atan2(disY, disX) * 180 / Math.PI * (dis / 500);
+				setTimeout(setHead, 50, rotate);
+				lastPos = new Point(tailHead.x, tailHead.y);
+			}
+		}
+
+		private function setHead(rotate):void {
+			tailHead.rotation += rotate;
 		}
 
 		private function onDown(e:MouseEvent):void {
-			TailPart(e.currentTarget).startDrag();
+			tailHead.startDrag();
+			dragging = true;
 		}
 
 		private function onUp(e:MouseEvent):void {
-			TailPart(e.currentTarget).stopDrag();
+			tailHead.stopDrag();
+			dragging = false;
 		}
 	}
 }
