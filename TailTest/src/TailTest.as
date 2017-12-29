@@ -8,32 +8,37 @@ package {
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.setTimeout;
-
+	
+	import utils.Fps;
 	import utils.LoopManager;
 	import utils.ResourceManager;
 	import utils.Style;
 
-	[SWF(frameRate = "30", backgroundColor = "0xaaaaaa", width = 720, height = 480)]
+	[SWF(frameRate = "60", backgroundColor = "0xaaaaaa", width = 1024, height = 768)]
 
 	public class TailTest extends Sprite {
 
 		private var res:Bitmap;
 		private var DELAY:int = 1;
-		private var CUT:int = 1;
+		private var CUT:int = 10;
 		private var cutWidth:int;
 		private var dragging:Boolean;
-		private var REFER_RATE:Number = 1;
+		private var REFER_RATE:Number = 0.85;
 		private var resX:int = 50;
 		private var resY:int = 50;
 		private var partList:Array;
 		private var targetSp:Sprite;
 		private var lastPos:Point;
 		private var tailHead:TailPart;
+		private var tail:Sprite;
+		private var effectLayer:Sprite;
 
 		public function TailTest() {
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			init();
+			var fps:Fps = new Fps();
+			fps.x = 100;
+			addChild(fps);
 		}
 
 		private function init():void {
@@ -41,6 +46,9 @@ package {
 				ResourceManager.getInstance().loadRes("common", init);
 				return;
 			}
+			effectLayer = new Sprite();
+			this.addChild(effectLayer);
+			PhantomUtil.getInstance().setLayer(effectLayer);
 			targetSp = new Sprite();
 			this.addChild(targetSp);
 			LoopManager.init();
@@ -53,6 +61,8 @@ package {
 			cutWidth = res.width / CUT;
 			var posArr:Array = [];
 			partList = [];
+			tail = new Sprite();
+			this.addChild(tail);
 			for(var i:int = 0; i < CUT; i++) {
 				bmd = new BitmapData(cutWidth, res.height, true, 0);
 				bmd.copyPixels(res.bitmapData, new Rectangle(cutWidth * i, 0, cutWidth, res.height), new Point());
@@ -86,11 +96,10 @@ package {
 				if(i == 0) {
 					tailHead = part;
 					tailHead.graphics.beginFill(0xffff00, 0.5);
-					tailHead.graphics.drawCircle(0, 0, 35);
+//					tailHead.graphics.drawCircle(0, 0, 35);
 					tailHead.addEventListener(MouseEvent.MOUSE_DOWN, onDown);
 					this.addEventListener(MouseEvent.MOUSE_MOVE, onMove);
 					this.addEventListener(MouseEvent.MOUSE_UP, onUp);
-//					this.addEventListener(MouseEvent.MOUSE_OUT, onUp);
 				}
 
 				var radius:int = (pixelBottom - pixelTop) / 2;
@@ -112,15 +121,16 @@ package {
 
 				part.x = 150 + (cutWidth + 0) * i;
 				part.y = 250 + (0) * i;
-				this.addChildAt(part, 0);
+				tail.addChildAt(part, 0);
 			}
+			PhantomUtil.getInstance().addRole(tail);
 			res = null;
 		}
 
 		private function onFrame(e:Event):void {
-			if(dragging) {
+//			if(dragging) {
 				setLine();
-			}
+//			}
 		}
 
 		private function setLine():void {
@@ -139,6 +149,10 @@ package {
 				setPos(partList[i], focusX, focusY, radian);
 //				LoopManager.doDelay(DELAY, setPos, [partList[i], focusX, focusY, radian]);
 			}
+//			var bmd:BitmapData = new BitmapData(tail.width, tail.height, true, 0);
+//			bmd.draw(tail);
+//			var bmp:Bitmap = new Bitmap(bmd);
+//			effectLayer.addChild(bmp);
 		}
 
 		private function setPos(part:TailPart, x:int, y:int, angle:Number = 0):void {
@@ -158,7 +172,7 @@ package {
 				var disY:Number = (lastPos.y - tailHead.y);
 				var dis:Number = Math.sqrt(disX * disX + disY * disY);
 				var rotate:Number = Math.atan2(disY, disX) * 180 / Math.PI * (dis / 500);
-				setTimeout(setHead, 50, rotate);
+//				setTimeout(setHead, 50, rotate);
 				lastPos = new Point(tailHead.x, tailHead.y);
 			}
 		}
