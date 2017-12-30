@@ -23,7 +23,7 @@ package {
 		private var CUT:int = 10;
 		private var cutWidth:int;
 		private var dragging:Boolean;
-		private var REFER_RATE:Number = 0.85;
+		private var REFER_RATE:Number = 0.80;
 		private var resX:int = 50;
 		private var resY:int = 50;
 		private var partList:Array;
