@@ -1,0 +1,13 @@
+package
+{
+	public class KeyBoardManager
+	{
+		public function KeyBoardManager()
+		{
+		}
+		
+		public initStage(stage):void {
+			
+		}
+	}
+}

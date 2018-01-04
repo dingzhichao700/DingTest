@@ -1,0 +1,43 @@
+package {
+	import flash.display.Bitmap;
+	import flash.display.Sprite;
+	
+	import utils.BitmapClip;
+	import utils.Style;
+
+	public class Role extends Sprite {
+
+		private var _state:int;
+		private var _appearType:int;
+		private var conBody:Sprite;
+		private var conFoot:Sprite;
+
+		public function Role() {
+			conBody = new Sprite();
+			addChild(conBody);
+			conFoot = new Sprite();
+			addChild(conFoot);
+		}
+
+		public function setAppear(type:int):void {
+			_appearType = type;
+		}
+
+		/*↓↓↓控制脚↓↓↓*/
+		public function playStand():void {
+			conFoot.removeChildren();
+			Style.getBitmap("leg_1", "", conFoot, -20);
+			Style.getBitmap("leg_1", "", conFoot, 20);
+		}
+
+		public function playWalk():void {
+			conFoot.removeChildren();
+			BitmapClip.getBitmapClip("leg", "", true, 16, -20);
+			BitmapClip.getBitmapClip("leg", "", true, 16, 20);
+		}
+
+		public function playJump():void {
+		}
+	/*↑↑↑控制脚↑↑↑*/
+	}
+}

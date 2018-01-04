@@ -1,0 +1,94 @@
+package {
+	import flash.display.Sprite;
+	import flash.display.StageScaleMode;
+	
+	import util.EventName;
+	
+	import utils.Dispatcher;
+	import utils.Fps;
+	import utils.ResourceManager;
+
+	[SWF(frameRate = "60", backgroundColor = "0xaaaaaa", width = 720, height = 480)]
+	public class PixelShooter extends Sprite {
+
+		/**水平方向状态 右1左2*/
+		private var moveHori:int = 0;
+		/**竖直方向状态 上1下2*/
+		private var moveVert:int = 0;
+		private var role:Role;
+		private var SPEED:int = 3;
+
+		public function PixelShooter() {
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			KeyBoardManager.initStage(this.stage);
+			Dispatcher.addListener(EventName.KEY_DOWN, onDown);
+			init();
+		}
+
+		private function init():void {
+			if (!ResourceManager.getInstance().hasRes("common")) {
+				ResourceManager.getInstance().loadRes("common", init)
+				return;
+			}
+
+			var fps:Fps = new Fps();
+			fps.x = 60;
+			this.addChild(fps);
+
+			role = new Role();
+			role.x = 200;
+			role.y = 200;
+			this.addChild(role);
+		}
+
+		private function onDown(key:int):void {
+			switch (key) {
+				case 65: //A
+				case 68: //D
+					setMoveState(key, 1);
+					break;
+				case 87: //W
+				case 83: //S
+					setMoveState(key, 1);
+					break;
+			}
+		}
+
+		private function onUp(key:int):void {
+			switch (key) {
+				case 65: //A
+				case 68: //D
+					setMoveState(key, false);
+					break;
+				case 87: //W
+				case 83: //S
+					setMoveState(key, 0);
+					break;
+			}
+		}
+
+		/**
+		 * 设置移动状态
+		 * @param key 按键
+		 * @param dir 方向：1横向2纵向
+		 * @param downUp 按键是否按下
+		 */
+		private function setMoveState(key:int, downUp:Boolean):void {
+			if (downUp == 1) {
+				if (key == 65 || key == 68) {
+					moveHori = key == 68 ? 1 : 2;
+				}
+				if (key == 83 || key == 87) {
+					moveVert = key == 87 ? 1 : 2;
+				}
+
+			}
+
+		}
+
+		private function moveRole():void {
+			role.x += moveHori == 1 ? SPEED : (moveHori == 2 ? -SPEED : 0);
+			role.y += moveVert == 1 ? SPEED : (moveVert == 2 ? -SPEED : 0);
+		}
+	}
+}

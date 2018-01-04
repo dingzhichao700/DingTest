@@ -1,0 +1,48 @@
+package utils {
+	import flash.display.Bitmap;
+	import flash.display.Sprite;
+	import flash.events.Event;
+
+	public class BitmapClip extends Sprite {
+
+		private var resName:String;
+		private var url:String;
+		private var loop:Boolean;
+		private var centerPos:Boolean;
+		private var count:int;
+		private var curIndex:int;
+
+		public function BitmapClip(resName:String, url:String = "", loop:Boolean = false, count:int = 5, centerPos:Boolean = false) {
+			this.resName = resName;
+			this.url = url;
+			this.loop = loop;
+			this.count = count;
+			curIndex = 1;
+			this.addEventListener(Event.ENTER_FRAME, onFrame);
+		}
+
+		private function onFrame(e:Event):void {
+			this.removeChildren();
+			var bmp:Bitmap = Style.getBitmap(resName + "_" + curIndex, url, this);
+			bmp.x = -bmp.width / 2;
+			bmp.y = -bmp.height / 2;
+			if (curIndex == count) {
+				if (loop) {
+					curIndex = 1
+				} else {
+					this.removeChildren();
+					this.removeEventListener(Event.ENTER_FRAME, onFrame);
+					this.parent.removeChild(this);
+				}
+			} else {
+				curIndex++;
+			}
+		}
+
+		public static function getBitmapClip(resName:String, url:String = "", loop:Boolean = false, count:int = 5, centerPos:Boolean = false):BitmapClip {
+			url == "" ? "common" : url;
+			var clip:BitmapClip = new BitmapClip(resName, url, loop, count);
+			return clip;
+		}
+	}
+}

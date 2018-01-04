@@ -1,0 +1,12 @@
+package utils {
+
+	public class BitmapClip {
+		public function BitmapClip() {
+		}
+
+		public static function getBitmapClip(resName:string, url:string="", loop:Boolean=false, count:int):BitmapClip {
+			var clip:BitmapClip=new BitmapClip();
+			return clip;
+		}
+	}
+}

@@ -1,0 +1,9 @@
+package
+{
+	public class KeyBoardManager
+	{
+		public function KeyBoardManager()
+		{
+		}
+	}
+}

@@ -190,3 +190,278 @@ java.lang.Exception
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:622)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:577)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1410)
+!SESSION 2018-01-01 17:56:07.641 -----------------------------------------------
+eclipse.buildId=M20110909-1335
+java.version=1.6.0_31
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_CN
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.jface 2 0 2018-01-01 17:57:26.430
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2018-01-01 17:57:26.430
+!MESSAGE A conflict occurred for CTRL+SHIFT+F:
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.organize.autoformat,应用格式化,
+		,
+		Category(com.adobe.flexbuilder.as.editor.source.editing.category,ActionScript 源代码编辑,null,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(FlexPrettyPrintFormat.commands.addons.flexbuilder,Format MXML/ActionScript,
+		Format Adobe MXML or ActionScript code.  Format the selected lines or the entire document if there is no selection.,
+		Category(FlexPrettyPrintCommand.commands.category,Flex,null,true),
+		flexprettyprint.handlers.FlexPrettyFormatHandler,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+
+!ENTRY org.eclipse.jface 2 0 2018-01-01 17:57:48.211
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2018-01-01 17:57:48.211
+!MESSAGE A conflict occurred for CTRL+G:
+Binding(CTRL+G,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.find.all.declarations.in.workspace,在工作空间中查找所有声明,
+		,
+		Category(com.adobe.flexbuilder.editorcore.navigation.category,导航,null,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.adobe.flexbuilder.as.editor.ui.actions.FindAllDeclarationsAction@958ef1f)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+Binding(CTRL+G,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.find.all.declarations.in.workspace,在工作空间中查找所有声明,
+		,
+		Category(com.adobe.flexbuilder.editorcore.navigation.category,导航,null,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.adobe.flexbuilder.as.editor.ui.actions.FindAllDeclarationsAction@958ef1f)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexbuilder.as.editor.context.packageexplorer,,,system)
+Binding(CTRL+G,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.search.declarations.in.workspace,工作空间中的声明,
+		在工作空间中搜索对所选元素的声明,
+		Category(org.eclipse.search.ui.category.search,搜索,搜索命令类别,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2018-01-01 17:57:48.211
+!MESSAGE A conflict occurred for CTRL+SHIFT+G:
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.find.all.references.in.workspace,在工作空间中查找所有引用,
+		,
+		Category(com.adobe.flexbuilder.editorcore.navigation.category,导航,null,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.adobe.flexbuilder.as.editor.ui.actions.FindAllReferencesAction@2dbae104)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.find.all.references.in.workspace,在工作空间中查找所有引用,
+		,
+		Category(com.adobe.flexbuilder.editorcore.navigation.category,导航,null,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.adobe.flexbuilder.as.editor.ui.actions.FindAllReferencesAction@2dbae104)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexbuilder.as.editor.context.packageexplorer,,,system)
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace,工作空间中的引用,
+		在工作空间中搜索对所选元素的引用,
+		Category(org.eclipse.search.ui.category.search,搜索,搜索命令类别,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SESSION 2018-01-02 17:29:14.658 -----------------------------------------------
+eclipse.buildId=M20110909-1335
+java.version=1.6.0_31
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_CN
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.jface 2 0 2018-01-02 17:32:46.671
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2018-01-02 17:32:46.671
+!MESSAGE A conflict occurred for CTRL+SHIFT+F:
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.organize.autoformat,应用格式化,
+		,
+		Category(com.adobe.flexbuilder.as.editor.source.editing.category,ActionScript 源代码编辑,null,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(FlexPrettyPrintFormat.commands.addons.flexbuilder,Format MXML/ActionScript,
+		Format Adobe MXML or ActionScript code.  Format the selected lines or the entire document if there is no selection.,
+		Category(FlexPrettyPrintCommand.commands.category,Flex,null,true),
+		flexprettyprint.handlers.FlexPrettyFormatHandler@56277446,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+!SESSION 2018-01-04 16:33:00.382 -----------------------------------------------
+eclipse.buildId=M20110909-1335
+java.version=1.6.0_31
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=zh_CN
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.jface 2 0 2018-01-04 16:34:44.191
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2018-01-04 16:34:44.191
+!MESSAGE A conflict occurred for CTRL+SHIFT+F:
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.organize.autoformat,应用格式化,
+		,
+		Category(com.adobe.flexbuilder.as.editor.source.editing.category,ActionScript 源代码编辑,null,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+Binding(CTRL+SHIFT+F,
+	ParameterizedCommand(Command(FlexPrettyPrintFormat.commands.addons.flexbuilder,Format MXML/ActionScript,
+		Format Adobe MXML or ActionScript code.  Format the selected lines or the entire document if there is no selection.,
+		Category(FlexPrettyPrintCommand.commands.category,Flex,null,true),
+		flexprettyprint.handlers.FlexPrettyFormatHandler,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+
+!ENTRY org.eclipse.jface 2 0 2018-01-04 21:39:18.836
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2018-01-04 21:39:18.837
+!MESSAGE A conflict occurred for CTRL+G:
+Binding(CTRL+G,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.find.all.declarations.in.workspace,在工作空间中查找所有声明,
+		,
+		Category(com.adobe.flexbuilder.editorcore.navigation.category,导航,null,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.adobe.flexbuilder.as.editor.ui.actions.FindAllDeclarationsAction@31e3bb9e)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+Binding(CTRL+G,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.find.all.declarations.in.workspace,在工作空间中查找所有声明,
+		,
+		Category(com.adobe.flexbuilder.editorcore.navigation.category,导航,null,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.adobe.flexbuilder.as.editor.ui.actions.FindAllDeclarationsAction@31e3bb9e)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexbuilder.as.editor.context.packageexplorer,,,system)
+Binding(CTRL+G,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.search.declarations.in.workspace,工作空间中的声明,
+		在工作空间中搜索对所选元素的声明,
+		Category(org.eclipse.search.ui.category.search,搜索,搜索命令类别,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2018-01-04 21:39:18.837
+!MESSAGE A conflict occurred for CTRL+SHIFT+G:
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.find.all.references.in.workspace,在工作空间中查找所有引用,
+		,
+		Category(com.adobe.flexbuilder.editorcore.navigation.category,导航,null,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.adobe.flexbuilder.as.editor.ui.actions.FindAllReferencesAction@5e329ba8)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexide.editorcore.flexEditorScope,,,system)
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(com.adobe.flexbuilder.as.editor.find.all.references.in.workspace,在工作空间中查找所有引用,
+		,
+		Category(com.adobe.flexbuilder.editorcore.navigation.category,导航,null,true),
+		LegacyHandlerWrapper(ActionHandler(action=com.adobe.flexbuilder.as.editor.ui.actions.FindAllReferencesAction@5e329ba8)),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	com.adobe.flexbuilder.as.editor.context.packageexplorer,,,system)
+Binding(CTRL+SHIFT+G,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace,工作空间中的引用,
+		在工作空间中搜索对所选元素的引用,
+		Category(org.eclipse.search.ui.category.search,搜索,搜索命令类别,true),
+		,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.jface.text 4 0 2018-01-05 00:01:53.386
+!MESSAGE Unexpected runtime error while computing a text hover
+!STACK 0
+com.google.common.collect.ComputationException: java.lang.NullPointerException
+	at com.google.common.collect.ComputingConcurrentHashMap$ComputingSegment.compute(ComputingConcurrentHashMap.java:167)
+	at com.google.common.collect.ComputingConcurrentHashMap$ComputingSegment.compute(ComputingConcurrentHashMap.java:116)
+	at com.google.common.collect.ComputingConcurrentHashMap.apply(ComputingConcurrentHashMap.java:67)
+	at com.google.common.collect.MapMaker$ComputingMapAdapter.get(MapMaker.java:623)
+	at com.adobe.flash.compiler.internal.projects.CompilerProject.getCacheForScope(CompilerProject.java:701)
+	at com.adobe.flash.compiler.internal.scopes.ASScope.findPropertyQualified(ASScope.java:1476)
+	at com.adobe.flash.compiler.internal.definitions.references.ResolvedQualifiersReference.resolve(ResolvedQualifiersReference.java:80)
+	at com.adobe.flash.compiler.internal.definitions.DefinitionBase.resolveType(DefinitionBase.java:1049)
+	at com.adobe.flash.compiler.internal.definitions.DefinitionBase.resolveType(DefinitionBase.java:1089)
+	at com.adobe.flash.compiler.internal.definitions.ClassDefinition.resolveBaseClass(ClassDefinition.java:373)
+	at com.adobe.flash.compiler.internal.definitions.ClassDefinitionBase$ClassIterator.next(ClassDefinitionBase.java:497)
+	at com.adobe.flash.compiler.internal.definitions.ClassDefinitionBase$ClassIterator.next(ClassDefinitionBase.java:463)
+	at com.adobe.flash.compiler.internal.definitions.InterfaceDefinition$InterfaceIterator.<init>(InterfaceDefinition.java:273)
+	at com.adobe.flash.compiler.internal.definitions.ClassDefinitionBase.interfaceIterator(ClassDefinitionBase.java:399)
+	at com.adobe.flash.compiler.internal.definitions.FunctionDefinition.resolveImplementedFunction(FunctionDefinition.java:380)
+	at com.adobe.flash.compiler.internal.definitions.FunctionDefinition.isImplementation(FunctionDefinition.java:326)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageForFunction(ASDefinitionLabelProvider.java:870)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageForDefinition(ASDefinitionLabelProvider.java:584)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageForDefinition(ASDefinitionLabelProvider.java:617)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageForDefinition(ASDefinitionLabelProvider.java:640)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageDescriptorForDefinition(ASDefinitionLabelProvider.java:645)
+	at com.adobe.flexide.as.core.lookup.ASDefinition.getImageDescriptor(ASDefinition.java:241)
+	at com.adobe.flexide.as.core.asdoc.ASDocInputFactory.build(ASDocInputFactory.java:69)
+	at com.adobe.flexide.as.core.ActionScriptInfoHover.getHoverInfo2(ActionScriptInfoHover.java:100)
+	at com.adobe.flexide.as.core.TextHoverChooser.getActiveHover(TextHoverChooser.java:76)
+	at com.adobe.flexide.as.core.TextHoverChooser.getHoverInfo2(TextHoverChooser.java:121)
+	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+Caused by: java.lang.NullPointerException
+	at com.google.common.base.Preconditions.checkNotNull(Preconditions.java:187)
+	at com.google.common.collect.CustomConcurrentHashMap.hash(CustomConcurrentHashMap.java:1432)
+	at com.google.common.collect.ComputingConcurrentHashMap.apply(ComputingConcurrentHashMap.java:66)
+	at com.google.common.collect.MapMaker$ComputingMapAdapter.get(MapMaker.java:623)
+	at com.adobe.flash.compiler.internal.scopes.ASProjectScope.addScopeToCompilationUnitScopeList(ASProjectScope.java:1306)
+	at com.adobe.flash.compiler.internal.projects.CompilerProject$ScopeMakerFunction.apply(CompilerProject.java:106)
+	at com.adobe.flash.compiler.internal.projects.CompilerProject$ScopeMakerFunction.apply(CompilerProject.java:95)
+	at com.google.common.collect.ComputingConcurrentHashMap$ComputingSegment.compute(ComputingConcurrentHashMap.java:155)
+	... 26 more
+
+!ENTRY org.eclipse.jface.text 4 0 2018-01-05 00:01:54.009
+!MESSAGE Unexpected runtime error while computing a text hover
+!STACK 0
+com.google.common.collect.ComputationException: java.lang.NullPointerException
+	at com.google.common.collect.ComputingConcurrentHashMap$ComputingSegment.compute(ComputingConcurrentHashMap.java:167)
+	at com.google.common.collect.ComputingConcurrentHashMap$ComputingSegment.compute(ComputingConcurrentHashMap.java:116)
+	at com.google.common.collect.ComputingConcurrentHashMap.apply(ComputingConcurrentHashMap.java:67)
+	at com.google.common.collect.MapMaker$ComputingMapAdapter.get(MapMaker.java:623)
+	at com.adobe.flash.compiler.internal.projects.CompilerProject.getCacheForScope(CompilerProject.java:701)
+	at com.adobe.flash.compiler.internal.scopes.ASScope.findPropertyQualified(ASScope.java:1476)
+	at com.adobe.flash.compiler.internal.definitions.references.ResolvedQualifiersReference.resolve(ResolvedQualifiersReference.java:80)
+	at com.adobe.flash.compiler.internal.definitions.DefinitionBase.resolveType(DefinitionBase.java:1049)
+	at com.adobe.flash.compiler.internal.definitions.DefinitionBase.resolveType(DefinitionBase.java:1089)
+	at com.adobe.flash.compiler.internal.definitions.ClassDefinition.resolveBaseClass(ClassDefinition.java:373)
+	at com.adobe.flash.compiler.internal.definitions.ClassDefinitionBase$ClassIterator.next(ClassDefinitionBase.java:497)
+	at com.adobe.flash.compiler.internal.definitions.ClassDefinitionBase$ClassIterator.next(ClassDefinitionBase.java:463)
+	at com.adobe.flash.compiler.internal.definitions.InterfaceDefinition$InterfaceIterator.<init>(InterfaceDefinition.java:273)
+	at com.adobe.flash.compiler.internal.definitions.ClassDefinitionBase.interfaceIterator(ClassDefinitionBase.java:399)
+	at com.adobe.flash.compiler.internal.definitions.FunctionDefinition.resolveImplementedFunction(FunctionDefinition.java:380)
+	at com.adobe.flash.compiler.internal.definitions.FunctionDefinition.isImplementation(FunctionDefinition.java:326)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageForFunction(ASDefinitionLabelProvider.java:870)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageForDefinition(ASDefinitionLabelProvider.java:584)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageForDefinition(ASDefinitionLabelProvider.java:617)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageForDefinition(ASDefinitionLabelProvider.java:640)
+	at com.adobe.flexide.as.core.ASDefinitionLabelProvider.getImageDescriptorForDefinition(ASDefinitionLabelProvider.java:645)
+	at com.adobe.flexide.as.core.lookup.ASDefinition.getImageDescriptor(ASDefinition.java:241)
+	at com.adobe.flexide.as.core.asdoc.ASDocInputFactory.build(ASDocInputFactory.java:69)
+	at com.adobe.flexide.as.core.ActionScriptInfoHover.getHoverInfo2(ActionScriptInfoHover.java:100)
+	at com.adobe.flexide.as.core.TextHoverChooser.getActiveHover(TextHoverChooser.java:76)
+	at com.adobe.flexide.as.core.TextHoverChooser.getHoverInfo2(TextHoverChooser.java:121)
+	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+Caused by: java.lang.NullPointerException
+	at com.google.common.base.Preconditions.checkNotNull(Preconditions.java:187)
+	at com.google.common.collect.CustomConcurrentHashMap.hash(CustomConcurrentHashMap.java:1432)
+	at com.google.common.collect.ComputingConcurrentHashMap.apply(ComputingConcurrentHashMap.java:66)
+	at com.google.common.collect.MapMaker$ComputingMapAdapter.get(MapMaker.java:623)
+	at com.adobe.flash.compiler.internal.scopes.ASProjectScope.addScopeToCompilationUnitScopeList(ASProjectScope.java:1306)
+	at com.adobe.flash.compiler.internal.projects.CompilerProject$ScopeMakerFunction.apply(CompilerProject.java:106)
+	at com.adobe.flash.compiler.internal.projects.CompilerProject$ScopeMakerFunction.apply(CompilerProject.java:95)
+	at com.google.common.collect.ComputingConcurrentHashMap$ComputingSegment.compute(ComputingConcurrentHashMap.java:155)
+	... 26 more

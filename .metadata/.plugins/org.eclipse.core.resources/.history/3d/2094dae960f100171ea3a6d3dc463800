@@ -1,0 +1,34 @@
+package {
+	import flash.display.Sprite;
+
+	public class Role extends Sprite {
+
+		private var _state:int;
+		private var _appearType:int;
+		private var conBody:Sprite;
+		private var conFoot:Sprite;
+
+		public function Role() {
+			conBody = new Sprite();
+			addChild(conBody);
+			conFoot = new Sprite();
+			addChild(conFoot);
+		}
+
+		public function setAppear(type:int):void {
+			_appearType = type;
+		}
+
+		/*↓↓↓控制脚↓↓↓*/
+		public function playStand():void {
+			conFoot.removeChild();
+		}
+
+		public function playWalk():void {
+		}
+
+		public function playJump():void {
+		}
+	/*↑↑↑控制脚↑↑↑*/
+	}
+}

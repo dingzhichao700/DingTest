@@ -1,0 +1,15 @@
+package utils {
+	import flash.utils.Dictionary;
+
+	public class Dispatcher {
+		
+		private static var eventDic:Dictionary;
+		
+		public function Dispatcher() {
+		}
+		
+		public static function addListener(eventName:String, func:Function):void {
+			
+		}
+	}
+}

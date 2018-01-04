@@ -1,0 +1,19 @@
+package utils {
+	import flash.display.Sprite;
+
+	public class BitmapClip extends Sprite {
+
+		private var resName:String;
+		private var url:String;
+		private var loop:Boolean;
+		private var count:int;
+
+		public function BitmapClip(name:String, url:String = "", loop:Boolean = false, count:int = 5) {
+		}
+
+		public static function getBitmapClip(name:String, url:String = "", loop:Boolean = false, count:int = 5):BitmapClip {
+			var clip:BitmapClip = new BitmapClip();
+			return clip;
+		}
+	}
+}

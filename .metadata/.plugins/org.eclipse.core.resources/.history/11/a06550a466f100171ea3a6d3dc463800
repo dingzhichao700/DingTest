@@ -1,0 +1,11 @@
+package {
+	import flash.display.Stage;
+
+	public class KeyBoardManager {
+		public function KeyBoardManager() {
+		}
+
+		public static function initStage(stage:Stage):void {
+		}
+	}
+}

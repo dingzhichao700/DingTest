@@ -1,0 +1,18 @@
+package {
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
+
+	public class KeyBoardManager {
+		public function KeyBoardManager() {
+		}
+
+		public static function initStage(stage:Stage):void {
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+		}
+		
+		private function keyDown():void {
+			
+		}
+	}
+}

@@ -1,0 +1,11 @@
+package utils
+{
+	public class BitmapClip
+	{
+		public function BitmapClip()
+		{
+		}
+		
+		public static function get
+	}
+}
