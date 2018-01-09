@@ -1,0 +1,139 @@
+package {
+	import flash.display.Sprite;
+	import flash.display.StageScaleMode;
+	import flash.events.KeyboardEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+
+	import utils.Fps;
+	import utils.LoopManager;
+	import utils.ResourceManager;
+
+	[SWF(frameRate = "60", backgroundColor = "0xaaaaaa", width = 720, height = 480)]
+	public class PixelShooter extends Sprite {
+
+		/**竖直方向状态 上1下2*/
+		private var moveVert:Array = [0, 0];
+		/**水平方向状态 右3左4*/
+		private var moveHori:Array = [0, 0];
+		private var role:Role;
+		private var SPEED:int = 3;
+		private var moveTimer:Timer;
+
+		public function PixelShooter() {
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+
+			this.stage.addEventListener(KeyboardEvent.KEY_DOWN, onDown);
+			this.stage.addEventListener(KeyboardEvent.KEY_UP, onUp);
+
+			LoopManager.init();
+			moveTimer = new Timer(10);
+			moveTimer.addEventListener(TimerEvent.TIMER, onMoveTimer);
+
+			init();
+		}
+
+		private function init():void {
+			if (!ResourceManager.getInstance().hasRes("common")) {
+				ResourceManager.getInstance().loadRes("common", init)
+				return;
+			}
+
+			var fps:Fps = new Fps();
+			fps.x = 60;
+			this.addChild(fps);
+
+			role = new Role();
+			role.x = 200;
+			role.y = 200;
+			this.addChild(role);
+
+			moveTimer.start();
+		}
+
+		private function onDown(e:KeyboardEvent):void {
+			switch (e.keyCode) {
+				case 87: //W
+				case 83: //S
+				case 65: //A
+				case 68: //D
+					setMoveState(e.keyCode, e.type == "keyDown");
+					break;
+			}
+		}
+
+		private function onUp(e:KeyboardEvent):void {
+			switch (e.keyCode) {
+				case 87: //W
+				case 83: //S
+				case 65: //A
+				case 68: //D
+					setMoveState(e.keyCode, e.type == "keyDown");
+					break;
+			}
+		}
+
+		/**
+		 * 设置移动状态
+		 * @param key 按键
+		 * @param isDown 按键是否按下
+		 */
+		private function setMoveState(key:int, isDown:Boolean):void {
+			if (isDown) {
+				switch (key) {
+					case 87: //W
+						moveVert[1] = moveVert[0];
+						moveVert[0] = 1;
+						break;
+					case 87: //W
+					case 83: //S
+						moveVert[1] = moveVert[0];
+						moveVert[0] = 2;
+						break;
+					case 65: //A
+						moveHori[1] = moveHori[0];
+						moveHori[0] = 3;
+						break;
+					case 68: //D
+						moveHori[1] = moveHori[0];
+						moveHori[0] = 4;
+						break;
+				}
+			}
+			if (!isDown) {
+				switch (key) {
+					case 87: //W
+						if(moveVert[1] == 1){ //
+							moveVert[1] = 0;
+						} else if(moveVert[1] == 0){
+							moveVert[0] = 0;
+						}
+							
+					case 83: //S
+						moveVert[0] = temp;
+						break;
+					case 65: //W
+					case 68: //S
+						temp = moveHori[1];
+						moveHori[1] = moveHori[0];
+						moveHori[0] = temp;
+						break;
+				}
+			}
+		}
+
+		private function moveRole():void {
+			role.x += moveHori[0] == 4 ? SPEED : (moveHori[0] == 3 ? -SPEED : 0);
+			role.y += moveVert[0] == 2 ? SPEED : (moveVert[0] == 1 ? -SPEED : 0);
+			if (moveHori[0] != 0 || moveVert[0] != 0) {
+				role.playWalk();
+			} else {
+				role.playStand();
+			}
+		}
+
+		private function onMoveTimer(e:TimerEvent):void {
+			moveRole();
+		}
+	}
+}

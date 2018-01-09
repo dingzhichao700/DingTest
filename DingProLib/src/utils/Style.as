@@ -36,7 +36,7 @@ package utils {
 			}
 			var classBitmap:Class = ResourceManager.getInstance().getRes(resName).getDefinition(imgName) as Class;
 			var bmd:BitmapData = new classBitmap();
-			var bmp:Bitmap = new Bitmap(bmd)
+			var bmp:Bitmap = new Bitmap(bmd);
 			bmp.smoothing = true;
 			if (container) {
 				bmp.x = x;
