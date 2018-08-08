@@ -3,7 +3,7 @@
   <includeClasses>
     <classEntry path="utils.BitmapClip"/>
     <classEntry path="utils.Dispatcher"/>
-    <classEntry path="utils.LoadManager"/>
+    <classEntry path="utils.ImageButton"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

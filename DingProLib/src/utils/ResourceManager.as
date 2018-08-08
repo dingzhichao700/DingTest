@@ -1,6 +1,8 @@
 package utils {
+	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.LoaderInfo;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
@@ -13,10 +15,16 @@ package utils {
 	 *
 	 */
 	public class ResourceManager {
-		/**资源池*/
+		/**散图资源池*/
+		private var imgDic:Dictionary;
+		/**散图加载池*/
+		private var imgLoaderDic:Dictionary;
+		
+		/**swf资源池*/
 		private var resPool:Dictionary;
-		/**加载池*/
+		/**swf加载池*/
 		private var loadPool:Dictionary;
+		
 		private var loader:Loader;
 		private static const assetUrl:String = "assets/";
 
@@ -30,6 +38,8 @@ package utils {
 		}
 
 		public function ResourceManager() {
+			imgDic = new Dictionary();
+			imgLoaderDic = new Dictionary();
 			resPool = new Dictionary();
 			loadPool = new Dictionary();
 		}
@@ -47,7 +57,7 @@ package utils {
 		 */
 		public function loadRes(path:String, callBack:Function = null):void {
 			if (!hasRes(path)) {
-				loader = new Loader();
+				loader ||= new Loader();
 				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadHandler);
 				loadPool[path] = callBack;
 				try {
@@ -83,5 +93,47 @@ package utils {
 			var target:String = String(arr[arr.length - 1]);
 			return target.substring(0, target.indexOf(".swf"));
 		}
+		
+		public function getImage(url:String, con:Sprite = null, x:int = 0, y:int = 0):Bitmap {
+			var bmp:Bitmap = new Bitmap;
+			if(con){
+				bmp.x = x;
+				bmp.y = y;
+				con.addChild(bmp);
+			}
+			if(url != ""){
+				setImageData(url, bmp);
+			}
+			return bmp;
+		}
+		
+		public function setImageData(url:String, bmp:Bitmap):void {
+			if(imgDic[url]){
+				bmp.bitmapData = imgDic[url];
+			} else {
+				imgLoaderDic[url] ||= [];
+				imgLoaderDic[url].push(bmp);
+				getOutImage(url);
+			}
+		}
+		
+		private function getOutImage(url:String):void {
+			var loader:Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageComplete);
+			loader.load(new URLRequest(url));
+		}
+		
+		private function onImageComplete(e:Event):void {
+			for(var str:String in imgLoaderDic){
+				if((e.target).url.indexOf(str) != -1){
+					imgDic[str] = (e.target.content).bitmapData;
+					var arr:Array = imgLoaderDic[str] as Array;
+					for(var i:int = 0; i < arr.length;i++){
+						(arr[i] as Bitmap).bitmapData = imgDic[str];
+					}
+				}
+			}
+		}
+		
 	}
 }
