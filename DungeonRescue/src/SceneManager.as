@@ -1,12 +1,12 @@
 package {
-	import flash.display.Bitmap;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	
-	import utils.LoadManager;
+	import scene.SceneIndex;
+	import scene.SceneIntro;
+	import scene.SceneRescue;
 
 	public class SceneManager {
 
+		private var sceneGame:SceneRescue;
+		
 		private static var _instance:SceneManager;
 
 		public static function getInstance():SceneManager {
@@ -22,36 +22,28 @@ package {
 		 * @param state 0 封面 123关卡 10
 		 *
 		 */
-		public function initStage(state:int):void {
+		public function initStage(state:String):void {
+			LayerManager.getInstance().clearAll();
 			switch (state) {
-				case 0:
-					LayerManager.getInstance().clearAll();
-					var startSp:Sprite = new Sprite();
-					startSp.graphics.beginFill(0x00ff00, 0.5);
-					startSp.graphics.drawRect(0, 0,  350, 100);
-					startSp.x = 780;
-					startSp.y = 840;
-					startSp.addEventListener(MouseEvent.CLICK, onStart);
-					LayerManager.getInstance().LAYER_TOP.addChild(startSp);
-					
-					LoadManager.getInstance().loadImg("index.jpg", LayerManager.getInstance().LAYER_BG);
+				case "index":
+					var index:SceneIndex = new SceneIndex();
+					LayerManager.getInstance().LAYER_BG.addChild(index);
 					break;
-				case 1:
-				case 2:
-				case 3:
-					LayerManager.getInstance().clearAll();
-					LoadManager.getInstance().loadImg("gameBg.jpg", LayerManager.getInstance().LAYER_BG);
-					LoadManager.getInstance().loadImg("stage" + state + ".png", LayerManager.getInstance().LAYER_BG);
-					BlockPainter.getInstance().initMission(state);
+				case "intro":
+					var intro:SceneIntro = new SceneIntro();
+					LayerManager.getInstance().LAYER_BG.addChild(intro);
+					break;
+				case "1":
+				case "2":
+				case "3":
+					sceneGame ||= new SceneRescue();
+					sceneGame.setState(int(state));
+					LayerManager.getInstance().LAYER_BG.addChild(sceneGame);
 					
-					RolesManager.getInstance().init();
+					RolesManager.getInstance().init(int(state));
 					PlayerControl.getInstance().init();
 					break;
 			}
-		}
-		
-		private function onStart(e:MouseEvent):void {
-			initStage(2);
 		}
 	}
 }

@@ -18,7 +18,7 @@ package {
 			LayerManager.getInstance().init(this.stage);
 			KeyBoardManager.getInstance().init(this.stage);
 			
-			SceneManager.getInstance().initStage(0);
+			SceneManager.getInstance().initStage("index");
 		}
 	}
 }

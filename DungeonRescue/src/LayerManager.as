@@ -25,6 +25,10 @@ package {
 			LAYER_TOP.removeChildren();
 		}
 		
+		public function get stage():Stage {
+			return _stage;
+		}
+		
 		public function init(stage:Stage):void {
 			_stage = stage;
 			

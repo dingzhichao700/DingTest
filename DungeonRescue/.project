@@ -3,6 +3,8 @@
 	<name>DungeonRescue</name>
 	<comment></comment>
 	<projects>
+		<project>DingProLib</project>
+		<project>DingRoleLib</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
