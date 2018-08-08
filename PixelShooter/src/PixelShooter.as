@@ -1,8 +1,15 @@
 package {
+	import com.greensock.TweenMax;
+	
+	import flash.display.Bitmap;
+	import flash.display.Loader;
+	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
+	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.TimerEvent;
+	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.utils.Timer;
 	
@@ -62,6 +69,20 @@ package {
 			addChild(txt2);
 
 			moveTimer.start();
+			
+			
+			var loader:Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onComplete);
+			loader.load(new URLRequest("assets/bg.jpg"));
+		}
+		
+		private function onComplete(e:Event):void {
+			var img:Bitmap = (e.target as LoaderInfo).content as Bitmap;
+			img.x = 40;
+			img.y = 200;
+			img.rotationX = -70;
+//			TweenMax.to(img, 0.5, {rotationX:-70});
+			this.addChild(img);
 		}
 
 		private function onDown(e:KeyboardEvent):void {
