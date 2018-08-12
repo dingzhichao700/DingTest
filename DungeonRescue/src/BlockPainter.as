@@ -27,7 +27,7 @@ package {
 		
 		public function initMission(mission:int):void {
 			blockDotList = [block1, block2, block3];
-//			LayerManager.getInstance().stage.addEventListener(MouseEvent.CLICK, onClick);
+			LayerManager.getInstance().stage.addEventListener(MouseEvent.CLICK, onClick);
 			Dispatcher.addListener(KeyEvent.KEY_DOWN, onDown);
 			
 			blocks ||= new Sprite();
@@ -48,7 +48,8 @@ package {
 		
 		private function onClick(e:MouseEvent):void {
 			var point:Point = new Point(e.stageX, e.stageY);
-			addDot(point);
+			trace(point.x, point.y);
+//			addDot(point);
 		}
 		
 		private function onDown(e:KeyboardEvent):void {

@@ -2,8 +2,9 @@ package scene {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-
+	
 	import utils.ImageButton;
+	import utils.LoopManager;
 	import utils.ResourceManager;
 	import utils.Style;
 
