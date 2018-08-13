@@ -26,7 +26,7 @@ package utils {
 					arr[i].apply(null, params);
 				}
 			}
-
 		}
+		
 	}
 }
