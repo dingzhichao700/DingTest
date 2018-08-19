@@ -99,6 +99,11 @@ package utils {
 			timer.stop();
 			pauseStart = getTimer();
 		}
+		
+		/**是否暂停中*/
+		public function get isPause():Boolean {
+			return _isPause;
+		}
 
 		/**
 		 * 延时执行

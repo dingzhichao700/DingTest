@@ -1,4 +1,5 @@
 package utils {
+	import flash.geom.Point;
 	
 	/**
 	 * 一些很赞的工具 
@@ -25,6 +26,11 @@ package utils {
 				str += charge;
 			}
 			return str + String(num);
+		}
+		
+		/**获取两点间的距离长度*/
+		public static function getDis(p1:Point, p2:Point):Number {
+			return Math.sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y));
 		}
 	}
 }

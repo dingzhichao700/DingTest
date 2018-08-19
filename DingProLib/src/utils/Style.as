@@ -3,7 +3,6 @@ package utils {
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
@@ -125,11 +124,11 @@ package utils {
 			return bitmap;
 		}
 
-		public static function getBlock(width:int, height, con:DisplayObjectContainer = null, x:int = 0, y:int = 0, color:int = 0x00ff00, alpha:Number = 0.5):Sprite {
+		public static function getBlock(width:int, height, con:DisplayObjectContainer = null, x:int = 0, y:int = 0, color:int = 0x00ff00, alpha:Number = 0):Sprite {
 			var block:Sprite = new Sprite();
 			block.graphics.beginFill(color, alpha);
-			block.graphics.drawRect(0, 0,  width, height);
-			if(con){
+			block.graphics.drawRect(0, 0, width, height);
+			if (con) {
 				con.addChild(block);
 				block.x = x;
 				block.y = y;
@@ -137,16 +136,39 @@ package utils {
 			return block;
 		}
 
+		public static function getRound(radium, con:DisplayObjectContainer = null, x:int = 0, y:int = 0, color:int = 0x00ff00, alpha:Number = 0):Sprite {
+			var round:Sprite = new Sprite();
+			round.graphics.beginFill(color, alpha);
+			round.graphics.drawCircle(0, 0, radium);
+			if (con) {
+				con.addChild(round);
+				round.x = x;
+				round.y = y;
+			}
+			return round;
+		}
+
 		public static function getImageButton(url, con:DisplayObjectContainer = null, x:int = 0, y:int = 0):ImageButton {
 			var button:ImageButton = new ImageButton();
 			button.setImage(url);
-			if(con){
+			if (con) {
 				con.addChild(button);
 				button.x = x;
 				button.y = y;
 			}
 			return button;
 		}
+
+		public static function getText(value:String, con:DisplayObjectContainer = null, x:int = 0, y:int = 0, size:int = 20, color:String = "#ffffff", width:int = 200, height:int = 80):Label {
+			var text:Label = new Label(value, size, color, width, height);
+			if (con) {
+				con.addChild(text);
+				text.x = x;
+				text.y = y;
+			}
+			return text;
+		}
+
 	/**
 	 * 生成九宫格位图
 	 * @param imgName 图片名

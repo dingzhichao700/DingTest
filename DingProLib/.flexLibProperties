@@ -4,6 +4,7 @@
     <classEntry path="utils.BitmapClip"/>
     <classEntry path="utils.Dispatcher"/>
     <classEntry path="utils.ImageButton"/>
+    <classEntry path="utils.Label"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
