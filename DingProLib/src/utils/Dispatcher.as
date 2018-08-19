@@ -19,7 +19,7 @@ package utils {
 			}
 		}
 
-		public static function dispatch(eventName:String, ...params):void {
+		public static function dispatch(eventName:String, ... params):void {
 			if (eventDic && eventDic[eventName]) {
 				var arr:Array = eventDic[eventName];
 				for (var i:int = 0; i < arr.length; i++) {
@@ -27,6 +27,17 @@ package utils {
 				}
 			}
 		}
-		
+
+		public static function offListener(eventName:String, func:Function):void {
+			if (eventDic && eventDic[eventName]) {
+				var arr:Array = eventDic[eventName];
+				for (var i:int = 0; i < arr.length; i++) {
+					if (arr[i] == func) {
+						arr.splice(i, 1);
+					}
+				}
+			}
+		}
+
 	}
 }
