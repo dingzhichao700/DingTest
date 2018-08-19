@@ -8,7 +8,7 @@ package scene {
 	public class SceneIndex extends Sprite {
 		
 		public function SceneIndex() {
-			ResourceManager.getInstance().getImage("bgIndex.jpg", this);
+			ResourceManager.getInstance().getImage("res/bgIndex.jpg", this);
 			
 			var startSp:Sprite = Style.getBlock(410, 130, this, 1290, 840);
 			startSp.addEventListener(MouseEvent.CLICK, onStart);

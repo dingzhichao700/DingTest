@@ -4,20 +4,27 @@ package {
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.utils.Timer;
-
+	
 	import Role.Enemy;
+	import Role.Friend;
 	import Role.RoleView;
+	
+	import utils.LoopManager;
 
 	public class RolesManager {
 
-		private var roleCon:Sprite;
+		private var _roleCon:Sprite;
 		private var moveTimer:Timer;
 		private var _index:int;
-		private var player:RoleView;
+		private var _player:RoleView;
 		private var enemyList:Array;
-		private static const NPC_CFG1:Array = [[1, [700, 100], [500, 100]], [2, [970, 310], [970, 900]]];
-		private static const NPC_CFG2:Array = [[1, [500, 100], [700, 100]]];
-		private static const NPC_CFG3:Array = [[1, [500, 100], [700, 100]]];
+		private var friendList:Array;
+		private static const NPC_CFG1:Array = [[1, [700, 100], [500, 100]], [1, [970, 310], [970, 900]], [1, [200, 1000], [660, 1000]]];
+		private static const NPC_CFG2:Array = [[0, [760, 565]], [1, [1429, 210], [1080, 210]], [2, [920, 680], [920, 800]], [1, [210, 810], [500, 810]]];
+		private static const NPC_CFG3:Array = [[0, [1125, 293]], [2, [350, 180], [350, 120]], [1, [160, 470], [160, 660]], [2, [1000, 200], [1060, 200]], [2, [480, 350], [480, 400]], [1, [600, 660], [920, 660]]];
+		private var NPC_LIST:Array;
+		private static const START_POS:Array = [[100, 100], [100, 100], [1490, 100]];
+		private static const SCALE:Array = [1, 0.9, 0.8];
 
 		private static var instance:RolesManager;
 
@@ -27,9 +34,8 @@ package {
 		}
 
 		public function RolesManager() {
-			enemyList = [NPC_CFG1, NPC_CFG2, NPC_CFG3];
-			roleCon ||= new Sprite();
-			LayerManager.getInstance().LAYER_PLAYER.addChild(roleCon);
+			NPC_LIST = [NPC_CFG1, NPC_CFG2, NPC_CFG3];
+			_roleCon ||= new Sprite();
 		}
 
 		public function init(index:int):void {
@@ -48,27 +54,48 @@ package {
 
 		private function initPlayer():void {
 			roleCon.removeChildren();
+			LayerManager.getInstance().LAYER_PLAYER.addChild(roleCon);
 
-			player ||= new RoleView();
-			player.setRes("soldier1");
-			player.x = 100;
-			player.y = 100;
-			player.play("stand", 1);
-			roleCon.addChild(player);
+			_player ||= new RoleView();
+			_player.setRes("soldier1");
+			_player.scaleX = _player.scaleY = SCALE[_index - 1];
+			var startPos:Array = START_POS[_index - 1];
+			_player.x = startPos[0];
+			_player.y = startPos[1];
+			_player.play("stand", 1);
+			roleCon.addChild(_player);
 
-			var targetEnemys:Array = enemyList[_index - 1];
-			for (var i:int = 0; i < targetEnemys.length; i++) {
-				var enemy:Enemy = new Enemy();
-				enemy.setRes("enemy" + targetEnemys[i][0]);
-				var start:Point = new Point(targetEnemys[i][1][0], targetEnemys[i][1][1]);
-				var end:Point = new Point(targetEnemys[i][2][0], targetEnemys[i][2][1]);
-				enemy.setParol(start, end);
-				roleCon.addChild(enemy);
+			friendList = [];
+			enemyList = [];
+			var npcs:Array = NPC_LIST[_index - 1];
+			for (var i:int = 0; i < npcs.length; i++) {
+				if (npcs[i][0] == 0) {
+					var friend:Friend = new Friend();
+					friend.scaleX = friend.scaleY = SCALE[_index - 1];
+					friend.setRes("soldier2");
+					friend.x = npcs[i][1][0];
+					friend.y = npcs[i][1][1];
+					roleCon.addChild(friend);
+					friendList.push(friend);
+				} else {
+					var enemy:Enemy = new Enemy();
+					enemy.scaleX = enemy.scaleY = SCALE[_index - 1];
+					enemy.setRes("enemy" + npcs[i][0]);
+					var start:Point = new Point(npcs[i][1][0], npcs[i][1][1]);
+					var end:Point = new Point(npcs[i][2][0], npcs[i][2][1]);
+					enemy.setParol(start, end);
+					roleCon.addChild(enemy);
+					enemyList.push(enemy);
+				}
 			}
 		}
 
 		private function onMoveTimer(e:TimerEvent):void {
-			var step:int = RoleView.STEP;
+			if (LoopManager.getInstance().isPause) {
+				return;
+			}
+
+			var step:int = player.STEP;
 			var playerCtr:PlayerControl = PlayerControl.getInstance();
 			var xDis:int = playerCtr.moveHori[0] == 4 ? step : (playerCtr.moveHori[0] == 3 ? -step : 0);
 			var yDis:int = playerCtr.moveVert[0] == 2 ? step : (playerCtr.moveVert[0] == 1 ? -step : 0);
@@ -83,11 +110,28 @@ package {
 			if (!player) {
 				return;
 			}
+			/*检测撞墙*/
 			if (BlockPainter.getInstance().blocks && BlockPainter.getInstance().blocks.hitTestPoint(player.x + xDis, player.y + yDis, true)) {
 				return;
 			}
+			/*检测终点*/
+			if (BlockPainter.getInstance().finish && BlockPainter.getInstance().finish.hitTestPoint(player.x + xDis, player.y + yDis, true)) {
+				SceneManager.getInstance().tryPassStage();
+				return;
+			}
+			
+			/*移动*/
 			player.x += xDis;
 			player.y += yDis;
+			
+			/*检测敌人侦查等*/
+			if(enemyHitTest()){
+				hitEnemyOrBullet();
+				return;
+			}
+			
+			/*检测人质*/
+			friendHitTest();
 
 			/*动作动画*/
 			if (xDis == 0 && yDis == 0) {
@@ -99,8 +143,25 @@ package {
 					player.play("run", 1, yDis > 0 ? 5 : 1);
 				}
 			}
-
 			setIndexs();
+		}
+		
+		public function hitEnemyOrBullet():void {
+			if(GameDataManager.getInstance().chance > 0){
+				GameDataManager.getInstance().chance--;
+				SceneManager.getInstance().updateInfo();
+				var startPos:Array = START_POS[_index - 1];
+				player.x = startPos[0];
+				player.y = startPos[1];
+				player.invincible = true;
+			} else {
+				if (moveTimer) {
+					moveTimer.stop();
+					moveTimer.removeEventListener(TimerEvent.TIMER, onMoveTimer);
+					moveTimer = null;
+				}
+				SceneManager.getInstance().initStage("badEnd");
+			}
 		}
 
 		private function setRange():void {
@@ -130,6 +191,42 @@ package {
 				}
 			}
 		}
+		
+		/**友军碰撞*/
+		private function friendHitTest():Boolean {
+			var hitFriend:Boolean = false;
+			for (var i:int = 0; i < friendList.length; i++) {
+				var friend:Friend = friendList[i] as Friend;
+				if (friend.positionSp.hitTestPoint(player.x, player.y, false)) {
+					hitFriend = true;
+					roleCon.removeChild(friend);
+					friendList.splice(i, 1);
+					i--;
+					friend = null;
+					GameDataManager.getInstance().resCue++;
+				}
+			}
+			return hitFriend;
+		}
+		
+		/**敌人碰撞*/
+		private function enemyHitTest():Boolean {
+			var hitEnemy:Boolean = false;
+			for (var i:int = 0; i < enemyList.length; i++) {
+				var enemy:Enemy = enemyList[i] as Enemy;
+				if (enemy.fanSprite.hitTestPoint(player.x, player.y, true)) {
+					hitEnemy = true;
+				}
+			}
+			return hitEnemy;
+		}
+		
+		public function get roleCon():Sprite {
+			return _roleCon;
+		}
 
+		public function get player():RoleView {
+			return _player;
+		}
 	}
 }

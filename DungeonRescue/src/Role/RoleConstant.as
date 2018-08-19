@@ -1,7 +1,7 @@
 package Role {
 	public class RoleConstant {
 
-		private static const ACT_FRAME:Array = [{"attack": 12}, {"dead": 4}, {"hurt": 3}, {"run": 30}, {"sit": 1}, {"stand": 1}];
+		private static const ACT_FRAME:Array = [{"attack": 73}, {"dead": 4}, {"hurt": 3}, {"run": 30}, {"sit": 1}, {"stand": 1}];
 
 		public function RoleConstant() {
 		}

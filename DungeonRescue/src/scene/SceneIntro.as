@@ -4,7 +4,6 @@ package scene {
 	import flash.events.MouseEvent;
 	
 	import utils.ImageButton;
-	import utils.LoopManager;
 	import utils.ResourceManager;
 	import utils.Style;
 
@@ -17,7 +16,7 @@ package scene {
 		private const ROLE_URL:Array = ["soldier1.png", "soldier2.png", "enemy1.png", "enemy2.png"];
 
 		public function SceneIntro() {
-			ResourceManager.getInstance().getImage("bgIntro.jpg", this);
+			ResourceManager.getInstance().getImage("res/bgIntro.jpg", this);
 
 			var startSp:Sprite = Style.getBlock(310, 100, this, 1200, 920);
 			startSp.addEventListener(MouseEvent.CLICK, onBegin);
@@ -27,10 +26,10 @@ package scene {
 			returnSp.addEventListener(MouseEvent.CLICK, onBack);
 			this.addChild(returnSp);
 
-			btnLeft = Style.getImageButton("arrow_1.png", this, 150, 500);
+			btnLeft = Style.getImageButton("res/arrow_1.png", this, 150, 500);
 			btnLeft.addEventListener(MouseEvent.CLICK, onChangeLeft);
 
-			btnRight = Style.getImageButton("arrow_2.png", this, 1000, 500);
+			btnRight = Style.getImageButton("res/arrow_2.png", this, 1000, 500);
 			btnRight.addEventListener(MouseEvent.CLICK, onChangeRight);
 
 			imgRole = ResourceManager.getInstance().getImage("", this, 360, 240);
@@ -39,6 +38,7 @@ package scene {
 		}
 
 		private function onBegin(e:MouseEvent):void {
+			GameDataManager.getInstance().initData();
 			SceneManager.getInstance().initStage("1");
 		}
 
@@ -61,7 +61,7 @@ package scene {
 		}
 		
 		private function update():void {
-			ResourceManager.getInstance().setImageData(ROLE_URL[index], imgRole);
+			ResourceManager.getInstance().setImageData("res/" + ROLE_URL[index], imgRole);
 			btnLeft.visible = index > 0;
 			btnRight.visible = index < ROLE_URL.length - 1;
 		}

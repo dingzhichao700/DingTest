@@ -2,9 +2,10 @@ package {
 
 	public class GameDataManager {
 		
-		public var cur_stage:int;
-		/**当前是否已救出人质*/
-		public var savaHost:Boolean;
+		private var _stage:int;
+		/**当前已救出人质数*/
+		public var resCue:int;
+		/**剩余机会*/
 		public var chance:int;
 		
 		private static var instance:GameDataManager;
@@ -17,9 +18,26 @@ package {
 		public function GameDataManager() {
 		}
 		
+		/**重置数据*/
 		public function initData():void {
-			cur_stage = 1;
 			chance = 3;
+		}
+		
+		/**设置关卡数据，人质救出数归零*/
+		public function setStage(value:int):void {
+			_stage = value;
+			resCue = 0;
+		}
+		
+		public function get curStage():int {
+			return _stage;
+		}
+		
+		public function checkPassMission():Boolean {
+			if(curStage == 2 || curStage == 3){
+				return resCue >= 1;
+			}
+			return true;
 		}
 		
 	}

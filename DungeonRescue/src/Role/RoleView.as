@@ -5,8 +5,9 @@ package Role {
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.utils.Timer;
-
+	
 	import utils.Dispatcher;
+	import utils.EasyUtils;
 	import utils.LoopManager;
 	import utils.ResourceManager;
 
@@ -17,6 +18,8 @@ package Role {
 	 */
 	public class RoleView extends Sprite {
 
+		protected var _positionSp:Sprite;
+		private var roleCon:Sprite;
 		private var roleImg:Bitmap;
 		/**角色资源名：如man,woman,monster1*/
 		private var _resName:String;
@@ -26,6 +29,8 @@ package Role {
 		private var _actIndex:int;
 		/**方向，默认为5*/
 		private var _dir:int;
+		/**上一个方向，用于记录转向*/
+		private var _lastDir:int;
 		/**当前播放到第几帧*/
 		private var _frameIndex:int;
 
@@ -35,6 +40,8 @@ package Role {
 		private var moveTimer:Timer;
 		/**动画结束回调方法*/
 		private var actHandler:Function;
+		/**是否有动画结束回调*/
+		private var hasActHandle:Boolean;
 
 		/**巡逻状态，0待命，1正向巡逻，-1逆向巡逻*/
 		private var parolState:int;
@@ -43,16 +50,24 @@ package Role {
 		/**当前行动目标点*/
 		private var targetPoint:Point;
 
+		/**是否无敌*/
+		public var invincible:Boolean;
+
+		public var STEP:Number = 3;
 		private const ACT_SPEED:int = 20;
-		public static const STEP:int = 3;
 
 		public function RoleView() {
-			this.graphics.beginFill(0xff0000, 0.5);
-			this.graphics.drawCircle(0, 0, 10);
+			ResourceManager.getInstance().getImage("res/shadow.png", this, -40, -22);
+			_positionSp = new Sprite();
+			_positionSp.graphics.beginFill(0xff0000, /*0.5*/ 0);
+			_positionSp.graphics.drawCircle(0, 0, 10);
+			addChild(_positionSp);
 
+			roleCon = new Sprite();
+			addChild(roleCon);
 			roleImg = new Bitmap();
 			roleImg.scaleX = roleImg.scaleY = 0.4;
-			this.addChild(roleImg);
+			roleCon.addChild(roleImg);
 			Dispatcher.addListener(GameEvent.MAIN_LINE_EVENT, onMainLine);
 		}
 
@@ -74,25 +89,27 @@ package Role {
 		}
 
 		/**更新巡逻状态*/
-		private function updateParol():void {
+		protected function updateParol():void {
+			var start:Point = parolList[0];
+			var end:Point = parolList[1];
 			switch (parolState) {
 				case 0: //不巡逻
 					targetPoint = null;
 					break;
 				case 1: //正向巡逻
-					var end:Point = parolList[1];
-					if (x == end.x && y == end.y) {//到终点了
+					var disToEnd:int = EasyUtils.getDis(end, new Point(x, y))
+					if (disToEnd < STEP) { //到终点了
 						parolState = -1;
-						updateParol();
+						targetPoint = start;
 					} else {
 						targetPoint = end;
 					}
 					break;
 				case -1: //反向巡逻
-					var start:Point = parolList[0];
-					if (x == start.x && y == start.y) {//回到起点了
+					var disToBegin:int = EasyUtils.getDis(start, new Point(x, y))
+					if (disToBegin < STEP) { //回到起点了
 						parolState = 1;
-						updateParol();
+						targetPoint = end;
 					} else {
 						targetPoint = start;
 					}
@@ -143,7 +160,8 @@ package Role {
 				_dir = dir;
 				_frameIndex = 1;
 				actHandler = handler;
-				this.scaleX = dir <= 5 ? 1 : -1;
+				hasActHandle = actHandler != null;
+				roleCon.scaleX = dir <= 5 ? 1 : -1;
 			}
 		}
 
@@ -151,14 +169,13 @@ package Role {
 			var targetPoint:Point = this.targetPoint;
 			if (targetPoint) {
 				//已经在该点 或很靠近
-				if ((x == targetPoint.x && y == targetPoint.y) || (Math.abs(targetPoint.x - x) < STEP && Math.abs(targetPoint.y - y) < STEP)) {
+				var dis:int = Math.sqrt((targetPoint.x - x) * (targetPoint.x - x) + (targetPoint.y - y) * (targetPoint.y - y));
+				if (dis <= 10) {
 					/*直接放到目标点上，并将目标点置空，然后延时执行*/
 					x = targetPoint.x;
 					y = targetPoint.y;
 					this.targetPoint = null;
-					LoopManager.getInstance().doDelay(3000, moveOverHandler);
-					trace("1");
-					play("stand", 1);
+					attack();
 				} else { //还有距离，移动过去
 					var xDis:int = targetPoint.x - x;
 					var yDis:int = targetPoint.y - y;
@@ -180,35 +197,65 @@ package Role {
 		}
 
 		protected function moveOverHandler():void {
-			updateParol();
+			LoopManager.getInstance().doDelay(3000, updateParol);
 		}
 
 		private function onActTimer(e:Event):void {
 			if (_actName != "" && _actIndex != 0 && _dir != 0) {
 
+				if (_lastDir != _dir) {
+					_lastDir = _dir;
+					turnDirHandler();
+				}
+
 				/*如果有回调函数，则播到最后一帧时触发回调*/
 				var frameTotal:int = RoleConstant.getFrameNum(_actName);
-				if (_frameIndex > frameTotal && actHandler != null) {
-					actHandler();
-					return;
+				if (_frameIndex > frameTotal) {
+					if (hasActHandle) {//此处逻辑待优化，本意是动作播完如需执行回调，则播放到最后一帧时执行，且让画面停在最后一帧
+						if (actHandler) {
+							actHandler();
+							actHandler = null;
+						}
+						return;
+					}
 				}
 
 				/*否则继续循环播*/
 				_frameIndex = _frameIndex > frameTotal ? 1 : _frameIndex;
 				var targetIndex:String = _frameIndex < 10 ? ("00" + _frameIndex) : ("0" + _frameIndex);
 				var realDir:int = _dir <= 5 ? _dir : (10 - _dir)
-				var targetUrl:String = "image/" + _resName + "/" + _actName + "/" + _actName + _actIndex + "/" + realDir + "/" + targetIndex + ".png";
+				var targetUrl:String = "res/image/" + _resName + "/" + _actName + "/" + _actName + _actIndex + "/" + realDir + "/" + targetIndex + ".png";
 				ResourceManager.getInstance().setImageData(targetUrl, roleImg);
 				_frameIndex++;
 			}
 		}
 
+		/**转向回调，供子类使用*/
+		protected function turnDirHandler():void {
+		}
+
+		/**攻击，供子类使用*/
+		protected function attack():void {
+		}
+		
 		public function stop():void {
 			if (actTimer) {
 				actTimer.stop();
 				actTimer.removeEventListener(TimerEvent.TIMER, onActTimer);
 				actTimer = null;
 			}
+		}
+
+		public function get positionSp():Sprite {
+			return _positionSp;
+		}
+
+		public function get dir():int {
+			return _dir;
+		}
+
+		public function get resName():String {
+			return _resName;
 		}
 
 	}
