@@ -4,7 +4,7 @@ package {
 	import scene.SceneIntro;
 	import scene.SceneRescue;
 	import scene.SceneWin;
-	
+
 	import utils.Dispatcher;
 	import utils.LoopManager;
 
@@ -29,6 +29,7 @@ package {
 		 */
 		public function initStage(state:String):void {
 			LayerManager.getInstance().clearAll();
+			RolesManager.getInstance().clearRoles();
 			switch (state) {
 				case "index":
 					var index:SceneIndex = new SceneIndex();
@@ -62,19 +63,19 @@ package {
 					break;
 			}
 		}
-		
+
 		public function updateInfo():void {
-			if(sceneGame){
+			if (sceneGame) {
 				sceneGame.updateInfo();
 			}
 		}
-		
+
 		public function tryPassStage():void {
-			if(GameDataManager.getInstance().checkPassMission()){
-				if(GameDataManager.getInstance().curStage == 3){
+			if (GameDataManager.getInstance().checkPassMission()) {
+				if (GameDataManager.getInstance().curStage == 3) {
 					initStage("goodEnd");
 				} else {
-					SceneManager.getInstance().initStage((GameDataManager.getInstance().curStage+1).toString());
+					SceneManager.getInstance().initStage((GameDataManager.getInstance().curStage + 1).toString());
 				}
 			}
 		}

@@ -51,6 +51,25 @@ package {
 			moveTimer.addEventListener(TimerEvent.TIMER, onMoveTimer);
 			moveTimer.start();
 		}
+		
+		public function clearRoles():void {
+			if(enemyList && enemyList.length > 0){
+				for (var i:int = 0; i < enemyList.length; i++) {
+					(enemyList[i] as Enemy).destroy();
+					enemyList[i] = null;
+					enemyList.splice(i, 1);
+					i--;
+				}
+			}
+			if(friendList && friendList.length > 0){
+				for (var j:int = 0; j < friendList.length; j++) {
+					(friendList[j] as Friend).destroy();
+					friendList[j] = null;
+					friendList.splice(j, 1);
+					j--;
+				}
+			}
+		}
 
 		private function initPlayer():void {
 			roleCon.removeChildren();
@@ -64,7 +83,9 @@ package {
 			_player.y = startPos[1];
 			_player.play("stand", 1);
 			roleCon.addChild(_player);
-
+			
+			clearRoles();
+			
 			friendList = [];
 			enemyList = [];
 			var npcs:Array = NPC_LIST[_index - 1];

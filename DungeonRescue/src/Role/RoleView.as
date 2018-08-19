@@ -5,7 +5,7 @@ package Role {
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.utils.Timer;
-	
+
 	import utils.Dispatcher;
 	import utils.EasyUtils;
 	import utils.LoopManager;
@@ -147,7 +147,7 @@ package Role {
 			}
 			if (moveTimer) {
 				moveTimer.stop();
-				moveTimer.removeEventListener(TimerEvent.TIMER, onActTimer);
+				moveTimer.removeEventListener(TimerEvent.TIMER, onMoveTimer);
 			}
 		}
 
@@ -211,7 +211,7 @@ package Role {
 				/*如果有回调函数，则播到最后一帧时触发回调*/
 				var frameTotal:int = RoleConstant.getFrameNum(_actName);
 				if (_frameIndex > frameTotal) {
-					if (hasActHandle) {//此处逻辑待优化，本意是动作播完如需执行回调，则播放到最后一帧时执行，且让画面停在最后一帧
+					if (hasActHandle) { //此处逻辑待优化，本意是动作播完如需执行回调，则播放到最后一帧时执行，且让画面停在最后一帧
 						if (actHandler) {
 							actHandler();
 							actHandler = null;
@@ -237,13 +237,19 @@ package Role {
 		/**攻击，供子类使用*/
 		protected function attack():void {
 		}
-		
-		public function stop():void {
+
+		public function destroy():void {
 			if (actTimer) {
 				actTimer.stop();
 				actTimer.removeEventListener(TimerEvent.TIMER, onActTimer);
 				actTimer = null;
 			}
+			if (moveTimer) {
+				moveTimer.stop();
+				moveTimer.removeEventListener(TimerEvent.TIMER, onMoveTimer);
+				moveTimer = null;
+			}
+			Dispatcher.offListener(GameEvent.MAIN_LINE_EVENT, onMainLine);
 		}
 
 		public function get positionSp():Sprite {
