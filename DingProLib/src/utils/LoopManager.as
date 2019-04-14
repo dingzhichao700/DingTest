@@ -112,7 +112,7 @@ package utils {
 		 * @param arg 参数
 		 *
 		 */
-		public function doDelay(deley:Number, func:Function, args:Array = null):int {
+		public function doDelay(deley:Number, func:Function, ...args):int {
 			if (deley == 0) {
 				func.apply(null, args);
 				return 0;

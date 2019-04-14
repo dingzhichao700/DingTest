@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
-    <classEntry path="utils.BitmapClip"/>
-    <classEntry path="utils.Dispatcher"/>
-    <classEntry path="utils.ImageButton"/>
-    <classEntry path="utils.Label"/>
+    <classEntry path="utils.cases.GameSoundChannel"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

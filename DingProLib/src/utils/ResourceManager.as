@@ -19,12 +19,12 @@ package utils {
 		private var imgDic:Dictionary;
 		/**散图加载池*/
 		private var imgLoaderDic:Dictionary;
-		
+
 		/**swf资源池*/
 		private var resPool:Dictionary;
 		/**swf加载池*/
 		private var loadPool:Dictionary;
-		
+
 		private var loader:Loader;
 		private static const assetUrl:String = "assets/";
 
@@ -93,47 +93,59 @@ package utils {
 			var target:String = String(arr[arr.length - 1]);
 			return target.substring(0, target.indexOf(".swf"));
 		}
-		
-		public function getImage(url:String, con:Sprite = null, x:int = 0, y:int = 0):Bitmap {
-			var bmp:Bitmap = new Bitmap;
-			if(con){
+
+		public function getImage(url:String, con:Sprite = null, x:int = 0, y:int = 0, handler:Function = null):Bitmap {
+			var bmp:Bitmap = new Bitmap();
+			if (con) {
 				bmp.x = x;
 				bmp.y = y;
 				con.addChild(bmp);
 			}
-			if(url != ""){
-				setImageData(url, bmp);
+			if (url != "") {
+				setImageData(url, bmp, handler);
 			}
 			return bmp;
 		}
-		
-		public function setImageData(url:String, bmp:Bitmap):void {
-			if(imgDic[url]){
+
+		public function setImageData(url:String, bmp:Bitmap, handler:Function = null):void {
+			if (url == "") {
+				bmp.bitmapData = null;
+			} else if (imgDic[url]) {
 				bmp.bitmapData = imgDic[url];
 			} else {
 				imgLoaderDic[url] ||= [];
-				imgLoaderDic[url].push(bmp);
+				imgLoaderDic[url].push({pic: bmp, callback: handler});
 				getOutImage(url);
 			}
 		}
-		
+
 		private function getOutImage(url:String):void {
 			var loader:Loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onImageComplete);
+			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onError);
 			loader.load(new URLRequest(url));
 		}
-		
+
+		private function onError(e:IOErrorEvent):void {
+			trace("error: " + e.text);
+		}
+
 		private function onImageComplete(e:Event):void {
-			for(var str:String in imgLoaderDic){
-				if((e.target).url.indexOf(str) != -1){
+			for (var str:String in imgLoaderDic) {
+				if ((e.target).url.indexOf(str) != -1) {
 					imgDic[str] = (e.target.content).bitmapData;
 					var arr:Array = imgLoaderDic[str] as Array;
-					for(var i:int = 0; i < arr.length;i++){
-						(arr[i] as Bitmap).bitmapData = imgDic[str];
+					for (var i:int = 0; i < arr.length; i++) {
+						var bmp:Bitmap = arr[i].pic;
+						bmp.bitmapData = imgDic[str];
+						var callback:Function = arr[i].callback;
+						if (callback) {
+							callback();
+						}
 					}
 				}
 			}
 		}
-		
+
 	}
 }

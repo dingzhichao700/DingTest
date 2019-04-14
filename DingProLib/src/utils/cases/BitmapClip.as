@@ -1,8 +1,9 @@
-package utils {
+package utils.cases {
 	import flash.display.Bitmap;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import utils.Style;
 
 	public class BitmapClip extends Sprite {
 

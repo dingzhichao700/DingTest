@@ -5,6 +5,9 @@ package utils {
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	
+	import utils.cases.ImageButton;
+	import utils.cases.Label;
 
 	public class Style {
 
@@ -124,7 +127,7 @@ package utils {
 			return bitmap;
 		}
 
-		public static function getBlock(width:int, height, con:DisplayObjectContainer = null, x:int = 0, y:int = 0, color:int = 0x00ff00, alpha:Number = 0):Sprite {
+		public static function getBlock(width:int, height, con:DisplayObjectContainer = null, x:int = 0, y:int = 0, color:int = 0xff0000, alpha:Number = 0):Sprite {
 			var block:Sprite = new Sprite();
 			block.graphics.beginFill(color, alpha);
 			block.graphics.drawRect(0, 0, width, height);

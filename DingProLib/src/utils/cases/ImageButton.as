@@ -1,6 +1,7 @@
-package utils {
+package utils.cases {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import utils.ResourceManager;
 
 	public class ImageButton extends Sprite {
 		
