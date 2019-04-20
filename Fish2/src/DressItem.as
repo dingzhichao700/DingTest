@@ -2,12 +2,12 @@ package {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Linear;
-	
+
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
-	
+
 	import utils.LoopManager;
 	import utils.Style;
 
@@ -15,7 +15,8 @@ package {
 
 		private var _type:int;
 		private var _scale:Number;
-		private var con:Sprite;
+		protected var con:Sprite;
+
 		/**晃动状态 0原位， 1其他位置*/
 		public var rockState:int;
 		/**晃动之前的初始点*/
@@ -28,21 +29,30 @@ package {
 		private const CRAB_LIMIT:int = 120;
 		private const SCREW_SIZE:int = 30;
 		private const ROCK_SIZE:int = 5;
-		
+
 
 		/**装饰元件*/
 		public function DressItem(type:int, scale:Number, rotate:int) {
 			_type = type;
 			_scale = scale;
+			rotation = rotate;
 
-			con = new Sprite();
-			addChild(con);
 			var filter1:DropShadowFilter = new DropShadowFilter(15, 45, 0, 0.4);
 			this.filters = [filter1];
 
-			var res:String = "leaf_" + _type;
-			var bmp:Bitmap = Style.getBitmap(res, "common", con);
+			con = new Sprite();
+			addChild(con);
 
+			init();
+
+		/**定位红点*/
+//			var sp:Sprite = new Sprite();
+//			sp.graphics.beginFill(0xff0000);
+//			sp.graphics.drawCircle(0, 0 ,5);
+//			this.addChild(sp);
+		}
+
+		protected function init():void {
 			switch (_type) {
 				case 1:
 				case 2:
@@ -57,24 +67,19 @@ package {
 			}
 			_scale = Number(_scale.toFixed(2));
 			_scale = scale;
+
+			var bmp:Bitmap = Style.getBitmap("leaf_" + _type, "common", con);
 			bmp.scaleX = bmp.scaleY = _scale;
 			bmp.x = -bmp.width / 2;
 			bmp.y = -bmp.height / 2;
-			
-			rotation = rotate;
-			
-			if(_type <= 4){
-				if(Math.random() < 0.5){
+
+			/**青蛙*/
+			if (_type <= 4) {
+				if (Math.random() < 0.5) {
 					frog ||= new FrogItem();
 					con.addChild(frog);
 				}
 			}
-			
-			/**定位红点*/
-//			var sp:Sprite = new Sprite();
-//			sp.graphics.beginFill(0xff0000);
-//			sp.graphics.drawCircle(0, 0 ,5);
-//			this.addChild(sp);
 		}
 
 		public function get type():int {
@@ -92,6 +97,9 @@ package {
 		/**根据某点晃动*/
 		public function rockByPoint(point:Point):void {
 			if (rocking) {
+				return;
+			}
+			if (type == 6) {
 				return;
 			}
 			protoPoint = new Point(this.x, this.y);
@@ -122,7 +130,13 @@ package {
 		}
 
 		private function delayToCrab(point:Point):void {
-			TweenLite.to(con, 0.5, {x: point.x, y: point.y});
+			var targetX:Number = point.x;
+			var targetY:Number = point.y;
+			if (type == 6) {
+				targetX = targetX / 4;
+				targetY = targetY / 4;
+			}
+			TweenLite.to(con, 0.5, {x: targetX, y: targetY});
 		}
 
 		private function getDis(point:Point):int {
