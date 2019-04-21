@@ -65,9 +65,8 @@ package {
 		private function onOver(e:MouseEvent):void {
 			var result:Number = Math.random();
 			if (result < 0.5) { //小概率蛙鸣
-				SoundManager.getInstance().playSound("assets/wamingBg.mp3", false, 0.1 /*, reset*/);
-			} else { //大概率跳走
 				SoundManager.getInstance().playSound("assets/waming.mp3", false, 0.1 /*, reset*/);
+			} else { //大概率跳走
 				con.removeEventListener(MouseEvent.MOUSE_OVER, onOver);
 				var dis:int = Math.random() * 30 + 200;
 				TweenLite.to(con, 0.5, {y: -dis, onComplete: onJump});

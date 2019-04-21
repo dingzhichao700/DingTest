@@ -75,7 +75,7 @@ package {
 
 			/**青蛙*/
 			if (_type <= 4) {
-				if (Math.random() < 0.5) {
+				if (Math.random() < 0.3) {
 					frog ||= new FrogItem();
 					con.addChild(frog);
 				}
