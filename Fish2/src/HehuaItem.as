@@ -34,9 +34,8 @@ package {
 
 		override protected function init():void {
 			con.addEventListener(MouseEvent.MOUSE_OVER, onOver);
-			con.scaleX = con.scaleY = 1.4;
 			state = 0;
-			img = ResourceManager.getInstance().getImage("", con, -100, -100);
+			img = ResourceManager.getInstance().getImage("", con, -70, -70);
 			
 			this.addEventListener(Event.ENTER_FRAME, onFrame);
 		}

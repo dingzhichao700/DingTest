@@ -67,7 +67,7 @@ package {
 		public function set shocked(value:int):void {
 			_shocked = value;
 			if (_shocked == 1) {
-				LoopManager.getInstance().doDelay(2000, recoverFromShock);
+				LoopManager.getInstance().doDelay(3500, recoverFromShock);
 			}
 		}
 
