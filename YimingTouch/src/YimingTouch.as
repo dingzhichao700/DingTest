@@ -1,9 +1,9 @@
 package {
 	import flash.display.Sprite;
+	import flash.system.fscommand;
 	
 	import fl.controls.TextArea;
 	
-	import util.MainControl;
 	import util.WindowManager;
 	import util.XmlManager;
 
@@ -13,6 +13,7 @@ package {
 		private var txt:TextArea;
 
 		public function YimingTouch() {
+			fscommand("fullscreen", "true");
 			WindowManager.ins.init(this.stage);
 			
 			var xmlList:Array = [

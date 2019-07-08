@@ -1,4 +1,4 @@
-package {
+package module.zhengce {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -6,7 +6,6 @@ package {
 	import fl.controls.TextArea;
 	
 	import util.BaseView;
-	import util.MainControl;
 	import util.Utils;
 	import util.WindowManager;
 	import util.XmlManager;
