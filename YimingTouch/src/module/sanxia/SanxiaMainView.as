@@ -19,7 +19,7 @@ package module.sanxia {
 		public function SanxiaMainView() {
 			LAYER_TYPE = WindowManager.LAYER_PANEL1;
 
-			ResourceManager.getInstance().getImage("assets/index3_1.jpg", this, 0, 0);
+			ResourceManager.getInstance().getImage("assets/index1.jpg", this, 0, 0);
 			
 			btn2 = Style.getBlock(302, 68, this, 1438, 527);
 			btn2.addEventListener(MouseEvent.CLICK, onClick2);

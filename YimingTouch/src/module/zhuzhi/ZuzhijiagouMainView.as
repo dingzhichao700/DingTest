@@ -20,7 +20,7 @@ package module.zhuzhi {
 		public function ZuzhijiagouMainView() {
 			LAYER_TYPE = WindowManager.LAYER_PANEL1;
 			
-			ResourceManager.getInstance().getImage("assets/index3_2.jpg", this, 0, 0);
+			ResourceManager.getInstance().getImage("assets/index2.jpg", this, 0, 0);
 //			txt = Utils.createTextArea(850, 600, XmlManager.ins.getData(GameConfig.XML_SIGEBANG), this, 140, 230, 25);
 //			txt.setStyle("backgroundColor", "0xffffff"); 
 			

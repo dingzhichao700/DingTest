@@ -19,7 +19,7 @@ package module.lingdao {
 		public function LingdaoguanhuaiMainView() {
 			LAYER_TYPE = WindowManager.LAYER_PANEL1;
 			
-			ResourceManager.getInstance().getImage("assets/index3_4.jpg", this, 0, 0);
+			ResourceManager.getInstance().getImage("assets/index4.jpg", this, 0, 0);
 			
 			btn1 = Style.getBlock(302, 68, this, 1438, 454);
 			btn1.addEventListener(MouseEvent.CLICK, onClick1);

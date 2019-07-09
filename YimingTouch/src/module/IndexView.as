@@ -20,7 +20,7 @@ package module {
 		public function IndexView() {
 			LAYER_TYPE = WindowManager.LAYER_BOTTOM;
 			
-			ResourceManager.getInstance().getImage("assets/index2.jpg", this, 0, 0);
+			ResourceManager.getInstance().getImage("assets/index01.jpg", this, 0, 0);
 			
 			btn1 = Style.getBlock(302, 68, this, 1438, 454);
 			btn1.addEventListener(MouseEvent.CLICK, onClick1);
