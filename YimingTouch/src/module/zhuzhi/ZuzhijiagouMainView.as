@@ -1,4 +1,6 @@
 package module.zhuzhi {
+	import com.greensock.TweenMax;
+	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -45,6 +47,7 @@ package module.zhuzhi {
 		}
 		
 		override public function onOpen():void {
+			btnSelect.y = 597;
 			showCon(1);
 		}
 		
@@ -62,7 +65,8 @@ package module.zhuzhi {
 		
 		private function showCon(index:int):void {
 			boxCon.removeChildren();
-			btnSelect.y = this["btn" + index].y;
+			var targetY:int = this["btn" + index].y;
+			TweenMax.to(btnSelect, 0.2, {y: targetY});
 			switch (index) {
 				case 1:
 					ResourceManager.getInstance().getImage("assets/front2_" + index + ".png", boxCon, 100, 50);

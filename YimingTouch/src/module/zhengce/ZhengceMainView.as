@@ -1,4 +1,6 @@
 package module.zhengce {
+	import com.greensock.TweenMax;
+	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -21,6 +23,9 @@ package module.zhengce {
 		private var btnSelect:Bitmap;
 
 		private var sigebang:SigebangView;
+		private var dangjian:DangjianView;
+		private var lianxi:LianxiView;
+		private var jingji:JingjiView;
 
 		public function ZhengceMainView() {
 			LAYER_TYPE = WindowManager.LAYER_PANEL1;
@@ -51,6 +56,7 @@ package module.zhengce {
 		}
 
 		override public function onOpen():void {
+			btnSelect.y = 670;
 			showCon(1);
 		}
 
@@ -64,26 +70,39 @@ package module.zhengce {
 		}
 
 		private function onClick2(e:MouseEvent):void {
-//			showCon(2);
+			showCon(2);
 		}
 
 		private function onClick3(e:MouseEvent):void {
-//			showCon(3);
+			showCon(3);
 		}
 
 		private function onClick4(e:MouseEvent):void {
-//			showCon(4);
+			showCon(4);
 		}
 
 		private function showCon(index:int):void {
 			boxCon.removeChildren();
-			btnSelect.y = this["btn" + index].y;
+			var targetY:int = this["btn" + index].y;
+			TweenMax.to(btnSelect, 0.2, {y: targetY});
 			switch (index) {
 				case 1:
 					sigebang ||= new SigebangView();
 					sigebang.x = 30;
 					sigebang.y = 50;
 					boxCon.addChild(sigebang);
+					break;
+				case 2:
+					dangjian ||= new DangjianView();
+					boxCon.addChild(dangjian);
+					break;
+				case 3:
+					lianxi ||= new LianxiView();
+					boxCon.addChild(lianxi);
+					break;
+				case 4:
+					jingji ||= new JingjiView();
+					boxCon.addChild(jingji);
 					break;
 			}
 		}

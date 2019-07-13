@@ -15,16 +15,16 @@ package module.zhengce {
 		public function SigebangView() {
 			ResourceManager.getInstance().getImage("assets/guide3_1.png", this);
 			
-			part1 = Style.getBlock(1150, 88, this, 0, 59, 0x00ff00);
+			part1 = Style.getBlock(1150, 88, this, 0, 75, 0x00ff00);
 			part1.addEventListener(MouseEvent.CLICK, onPart1);
 			
-			part2 = Style.getBlock(1150, 88, this, 0, 154, 0x00ff00);
+			part2 = Style.getBlock(1150, 88, this, 0, 169, 0x00ff00);
 			part2.addEventListener(MouseEvent.CLICK, onPart2);
 			
-			part3 = Style.getBlock(1150, 88, this, 0, 248, 0x00ff00);
+			part3 = Style.getBlock(1150, 88, this, 0, 263, 0x00ff00);
 			part3.addEventListener(MouseEvent.CLICK, onPart3);
 			
-			part4 = Style.getBlock(1150, 88, this, 0, 342, 0x00ff00);
+			part4 = Style.getBlock(1150, 88, this, 0, 357, 0x00ff00);
 			part4.addEventListener(MouseEvent.CLICK, onPart4);
 		}
 		
@@ -41,6 +41,7 @@ package module.zhengce {
 		}
 		
 		private function onPart4(e:MouseEvent):void {
+			MainControl.ins.openZhengce_bangguanliView();
 		}
 		
 	}

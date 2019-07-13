@@ -7,6 +7,7 @@ package {
 	import module.lingdao.LingdaoguanhuaiMainView;
 	import module.sanxia.SanxiaMainView;
 	import module.zhengce.Sigebang_bangfazhanView;
+	import module.zhengce.Sigebang_bangguanliView;
 	import module.zhengce.Sigebang_bangjieyouView;
 	import module.zhengce.Sigebang_bangrongheView;
 	import module.zhengce.ZhengceMainView;
@@ -25,6 +26,7 @@ package {
 		private var zhengce_sigebang_bangronghe:Sigebang_bangrongheView;
 		private var zhengce_sigebang_bangfazhan:Sigebang_bangfazhanView;
 		private var zhengce_sigebang_bangjieyou:Sigebang_bangjieyouView;
+		private var zhengce_sigebang_bangguanli:Sigebang_bangguanliView;
 
 		private var lingdao:LingdaoguanhuaiMainView;
 
@@ -84,6 +86,11 @@ package {
 		public function openZhengce_bangjieyouView():void {
 			zhengce_sigebang_bangjieyou ||= new Sigebang_bangjieyouView();
 			zhengce_sigebang_bangjieyou.open();
+		}
+
+		public function openZhengce_bangguanliView():void {
+			zhengce_sigebang_bangguanli ||= new Sigebang_bangguanliView();
+			zhengce_sigebang_bangguanli.open();
 		}
 
 		public function openLingdaoguanhuaiIndex():void {

@@ -32,19 +32,19 @@ package module.zhengce {
 		}
 
 		private function onPart1(e:MouseEvent):void {
-			MainControl.ins.showFile("assets/pic/fazhan/file1.jpg");
+			MainControl.ins.showFile("assets/pic/fazhan/1.jpg");
 		}
 
 		private function onPart2(e:MouseEvent):void {
-			MainControl.ins.showFile("assets/pic/fazhan/file2.jpg");
+			MainControl.ins.showFile("assets/pic/fazhan/2.jpg");
 		}
 
 		private function onPart3(e:MouseEvent):void {
-			MainControl.ins.showFile("assets/pic/fazhan/file3.jpg");
+			MainControl.ins.showFile("assets/pic/fazhan/3.jpg");
 		}
 
 		private function onPart4(e:MouseEvent):void {
-			MainControl.ins.showFile("assets/pic/fazhan/file4.jpg");
+			MainControl.ins.showFile("assets/pic/fazhan/4.jpg");
 		}
 
 		private function onClose(e:MouseEvent):void {

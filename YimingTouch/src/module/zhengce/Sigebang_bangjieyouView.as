@@ -20,8 +20,8 @@ package module.zhengce {
 
 		override public function onOpen():void {
 			con.removeChildren();
-			ResourceManager.getInstance().getImage("assets/front3_1_3-2.png", con, 335, 302);
-			btnPic = Style.getBlock(1264, 60, this, 333, 916, 0x0000ff);
+			ResourceManager.getInstance().getImage("assets/front3_1_3-2.png", con, 335, 285);
+			btnPic = Style.getBlock(1264, 60, con, 333, 916, 0x0000ff);
 			btnPic.addEventListener(MouseEvent.CLICK, showFiles);
 		}
 
@@ -47,7 +47,7 @@ package module.zhengce {
 		}
 		
 		private function showFile(index:int):void {
-			var url:String = "assets/pic/jieyou/file" + (index + 1) + ".jpg";
+			var url:String = "assets/pic/jieyou/" + (index + 1) + ".jpg";
 			MainControl.ins.showFile(url);
 		}
 
