@@ -11,7 +11,6 @@ package module.zhengce {
 	public class Sigebang_bangrongheView extends SecondView {
 
 		private var btnPic:Sprite;
-		private var picMain:Bitmap;
 		private var picShotList:Array;
 
 		public function Sigebang_bangrongheView() {

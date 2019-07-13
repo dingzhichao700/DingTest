@@ -12,7 +12,6 @@ package module {
 
 	public class HomeView extends BaseView {
 
-		private var txt:TextArea;
 		private var btn:Sprite;
 
 		public function HomeView() {

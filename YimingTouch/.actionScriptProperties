@@ -29,7 +29,6 @@
         </excludedEntries>
       </libraryPathEntry>
       <libraryPathEntry kind="3" linkType="1" path="/DingProLib/bin/DingProLib.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="E:/AS3/User Interface.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

@@ -55,6 +55,7 @@ package module {
 
 		public function showFile(url:String):void {
 			fileCon.y = 0;
+			imgFile.bitmapData = null;
 			ResourceManager.getInstance().setImageData(url, imgFile, onLoad);
 		}
 

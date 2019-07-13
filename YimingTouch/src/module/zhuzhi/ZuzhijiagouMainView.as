@@ -1,8 +1,7 @@
 package module.zhuzhi {
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	
-	import fl.controls.TextArea;
 	
 	import util.BaseView;
 	import util.WindowManager;
@@ -16,35 +15,65 @@ package module.zhuzhi {
 		private var btn2:Sprite;
 		private var btn3:Sprite;
 		private var btnIndex:Sprite;
+		private var btnSelect:Bitmap;
+		
+		private var boxCon:Sprite;
 		
 		public function ZuzhijiagouMainView() {
 			LAYER_TYPE = WindowManager.LAYER_PANEL1;
 			
 			ResourceManager.getInstance().getImage("assets/index2.jpg", this, 0, 0);
-//			txt = Utils.createTextArea(850, 600, XmlManager.ins.getData(GameConfig.XML_SIGEBANG), this, 140, 230, 25);
-//			txt.setStyle("backgroundColor", "0xffffff"); 
+			btnSelect = ResourceManager.getInstance().getImage("assets/btn_select.jpg", this, 1499, 670);
+			ResourceManager.getInstance().getImage("assets/btns_2.png", this, 1520, 612);
+			
+			boxCon = new Sprite();
+			boxCon.x = 80;
+			boxCon.y = 340;
+			addChild(boxCon);
 			
 			btnIndex = Style.getBlock(376, 60, this, 1400, 870);
 			btnIndex.addEventListener(MouseEvent.CLICK, onIndex);
 			
-			btn1 = Style.getBlock(240, 58, this, 1500, 598, 0x00ff00);
+			btn1 = Style.getBlock(240, 59, this, 1500, 597, 0x00ff00);
 			btn1.addEventListener(MouseEvent.CLICK, onClick1);
 			
-			btn2 = Style.getBlock(240, 58, this, 1500, 655, 0x00ff00);
+			btn2 = Style.getBlock(240, 59, this, 1500, 655, 0x00ff00);
 			btn2.addEventListener(MouseEvent.CLICK, onClick2);
 			
-			btn3 = Style.getBlock(240, 58, this, 1500, 714, 0x00ff00);
+			btn3 = Style.getBlock(240, 59, this, 1500, 715, 0x00ff00);
 			btn3.addEventListener(MouseEvent.CLICK, onClick3);
 		}
 		
+		override public function onOpen():void {
+			showCon(1);
+		}
 		
 		private function onClick1(e:MouseEvent):void {
+			showCon(1);
 		}
 		
 		private function onClick2(e:MouseEvent):void {
+			showCon(2);
 		}
 		
 		private function onClick3(e:MouseEvent):void {
+			showCon(3);
+		}
+		
+		private function showCon(index:int):void {
+			boxCon.removeChildren();
+			btnSelect.y = this["btn" + index].y;
+			switch (index) {
+				case 1:
+					ResourceManager.getInstance().getImage("assets/front2_" + index + ".png", boxCon, 100, 50);
+					break;
+				case 2:
+					ResourceManager.getInstance().getImage("assets/front2_" + index + ".png", boxCon, 100, 50);
+					break;
+				case 3:
+					ResourceManager.getInstance().getImage("assets/front2_" + index + ".png", boxCon);
+					break;
+			}
 		}
 		
 		private function onIndex(e:MouseEvent):void {

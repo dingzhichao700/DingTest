@@ -2,15 +2,11 @@ package {
 	import flash.display.Sprite;
 	import flash.system.fscommand;
 	
-	import fl.controls.TextArea;
-	
 	import util.WindowManager;
 	import util.XmlManager;
 
 	[SWF(width = 1920, height = 1080, backgroundColor = "0xffffff", frameRate = "60")]
 	public class YimingTouch extends Sprite {
-
-		private var txt:TextArea;
 
 		public function YimingTouch() {
 			fscommand("fullscreen", "true");
