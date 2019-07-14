@@ -83,7 +83,7 @@ package module.lingdao {
 		}
 		
 		private function onPart1(e:MouseEvent):void {
-			MainControl.ins.showPic("assets/pic/lingdao/1.png");
+			MainControl.ins.openPicView2();
 		}
 		
 		private function onPart2(e:MouseEvent):void {
