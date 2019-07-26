@@ -11,7 +11,10 @@ package {
 	public class YimingTouch extends Sprite {
 
 		private const IMAGE_LIST:Array = [
-			"assets/bg_panel2.png", 
+			"assets/bg_panel2.png",
+			"assets/pic/zuzhi/1.png",
+			"assets/pic/zuzhi/2.png",
+			"assets/pic/zuzhi/3.png",
 			"assets/index00.jpg", 
 			"assets/index01.jpg", 
 			"assets/index1.jpg", 

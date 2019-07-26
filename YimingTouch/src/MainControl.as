@@ -5,6 +5,7 @@ package {
 	import module.PicSmallView;
 	import module.PicView;
 	import module.PicView2;
+	import module.PicView3;
 	import module.falv.FalvfaguiMainView;
 	import module.lingdao.LingdaoguanhuaiMainView;
 	import module.sanxia.SanxiaMainView;
@@ -39,6 +40,8 @@ package {
 		private var picSmallView:PicSmallView;
 
 		private var picView2:PicView2;
+		
+		private var picView3:PicView3;
 		
 		private var fileView:FileView;
 
@@ -132,6 +135,16 @@ package {
 		public function openPicView2():void {
 			picView2 ||= new PicView2();
 			picView2.open();
+		}
+
+		private function openPicView3():void {
+			picView3 ||= new PicView3();
+			picView3.open();
+		}
+
+		public function showPicView3(index:int):void {
+			openPicView3();
+			picView3.showPic(index);
 		}
 
 		public function openFileView():void {

@@ -1,15 +1,15 @@
 package module.zhuzhi {
 	import com.greensock.TweenMax;
-
+	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-
+	
 	import module.ImageViewer;
-
+	
 	import util.BaseView;
 	import util.WindowManager;
-
+	
 	import utils.ResourceManager;
 	import utils.Style;
 
@@ -19,14 +19,9 @@ package module.zhuzhi {
 		private var btn2:Sprite;
 		private var btn3:Sprite;
 		private var btn4:Sprite;
-		private var imgBtn1:Bitmap;
-		private var imgBtn2:Bitmap;
-		private var imgBtn3:Bitmap;
 
 		private var btnIndex:Sprite;
 		private var btnSelect:Bitmap;
-
-		private var imageView:ImageViewer;
 
 		private var boxCon:Sprite;
 
@@ -134,44 +129,26 @@ package module.zhuzhi {
 		}
 
 		private function showButton4():void {
-			imgBtn1 = ResourceManager.getInstance().getImage("", boxCon, 100, 160);
-			imgBtn2 = ResourceManager.getInstance().getImage("", boxCon, 472, 160);
-			imgBtn3 = ResourceManager.getInstance().getImage("", boxCon, 844, 160);
-
-			imageView = new ImageViewer();
-			imageView.x = 100;
-			imageView.y = 250;
-			imageView.setMask(1116, 435);
-			boxCon.addChild(imageView);
-
-			var file1:Sprite = Style.getBlock(371, 70, boxCon, imgBtn1.x, imgBtn1.y);
+			var file1:Sprite = Style.getBlock(356, 420, boxCon, 100, 130);
 			file1.addEventListener(MouseEvent.CLICK, onFile1);
 
-			var file2:Sprite = Style.getBlock(371, 70, boxCon, imgBtn2.x, imgBtn2.y);
+			var file2:Sprite = Style.getBlock(356, 420, boxCon, 495, 130);
 			file2.addEventListener(MouseEvent.CLICK, onFile2);
 
-			var file3:Sprite = Style.getBlock(371, 70, boxCon, imgBtn3.x, imgBtn3.y);
+			var file3:Sprite = Style.getBlock(356, 420, boxCon, 890, 130);
 			file3.addEventListener(MouseEvent.CLICK, onFile3);
-			showFile(1);
 		}
 
 		private function onFile1(e:MouseEvent):void {
-			showFile(1);
+			MainControl.ins.showPicView3(1);
 		}
 
 		private function onFile2(e:MouseEvent):void {
-			showFile(2);
+			MainControl.ins.showPicView3(2);
 		}
 
 		private function onFile3(e:MouseEvent):void {
-			showFile(3);
-		}
-
-		private function showFile(index:int):void {
-			ResourceManager.getInstance().setImageData("assets/zuzhi_yiming_1_" + (index == 1 ? 1 : 0) + ".png", imgBtn1);
-			ResourceManager.getInstance().setImageData("assets/zuzhi_yiming_2_" + (index == 2 ? 1 : 0) + ".png", imgBtn2);
-			ResourceManager.getInstance().setImageData("assets/zuzhi_yiming_3_" + (index == 3 ? 1 : 0) + ".png", imgBtn3);
-			imageView.showFile("assets/pic/zuzhi/" + index + ".jpg");
+			MainControl.ins.showPicView3(3);
 		}
 
 		private function onPic1(e:MouseEvent):void {
