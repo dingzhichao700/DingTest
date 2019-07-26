@@ -1,13 +1,13 @@
 package module {
 	import com.greensock.TweenMax;
-	
+
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.utils.Timer;
-	
+
 	import utils.ResourceManager;
 
 	public class ImageViewer extends Sprite {
@@ -17,6 +17,7 @@ package module {
 		private var fileCon:Sprite;
 		private var down_point:Point;
 		private var down_posY:int;
+		private var last_posY:int;
 		private var speed:Number;
 		private var timer_speed:Timer;
 		private var timer_flow:Timer;
@@ -34,7 +35,7 @@ package module {
 			imgFile = new Bitmap();
 			fileCon.addChild(imgFile);
 		}
-		
+
 		public function setMask(width:int, height:int):void {
 			mask ||= new Sprite();
 			mask.graphics.beginFill(0xff0000, 0.5);
@@ -45,7 +46,7 @@ package module {
 		}
 
 		public function showFile(url:String):void {
-			if(timer_flow){
+			if (timer_flow) {
 				timer_flow.removeEventListener(TimerEvent.TIMER, onFlow);
 			}
 			fileCon.y = 0;
@@ -67,18 +68,18 @@ package module {
 			down_point = new Point(mouseX, mouseY);
 			down_posY = fileCon.y;
 
-			timer_speed = new Timer(50);
+			timer_speed = new Timer(100);
 			timer_speed.addEventListener(TimerEvent.TIMER, onTimer);
 			timer_speed.start();
 		}
 
 		private function onTimer(e:TimerEvent):void {
-			speed = (mouseY - down_point.y) / 2;
+			last_posY = mouseY;
 		}
 
 		private function onMove(e:MouseEvent):void {
 			var addY:int = mouseY - down_point.y;
-			fileCon.y = down_posY + addY;
+			fileCon.y = down_posY + addY / 3;
 		}
 
 		private function onUp(e:MouseEvent):void {
@@ -95,6 +96,7 @@ package module {
 			} else if (fileCon.y + imgFile.height < content_h) {
 				TweenMax.to(fileCon, 0.5, {y: content_h - imgFile.height});
 			} else {
+				speed = (mouseY - last_posY) / 10;
 				playFlow();
 			}
 		}

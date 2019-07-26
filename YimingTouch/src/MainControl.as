@@ -2,6 +2,7 @@ package {
 	import module.FileView;
 	import module.HomeView;
 	import module.IndexView;
+	import module.PicSmallView;
 	import module.PicView;
 	import module.PicView2;
 	import module.falv.FalvfaguiMainView;
@@ -34,6 +35,8 @@ package {
 		private var falv:FalvfaguiMainView;
 
 		private var picView:PicView;
+		
+		private var picSmallView:PicSmallView;
 
 		private var picView2:PicView2;
 		
@@ -114,6 +117,16 @@ package {
 		public function showPic(url:String):void {
 			openPicView();
 			picView.showPic(url);
+		}
+
+		private function openSmallPicView():void {
+			picSmallView ||= new PicSmallView();
+			picSmallView.open();
+		}
+
+		public function showSmallPic(url:String):void {
+			openSmallPicView();
+			picSmallView.showPic(url);
 		}
 
 		public function openPicView2():void {
