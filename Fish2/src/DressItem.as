@@ -2,13 +2,14 @@ package {
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Elastic;
 	import com.greensock.easing.Linear;
-
+	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
-
+	
 	import utils.LoopManager;
+	import utils.ResourceManager;
 	import utils.Style;
 
 	public class DressItem extends Sprite {
@@ -25,6 +26,8 @@ package {
 		public var rocking:Boolean;
 		/**荷叶上的青蛙*/
 		private var frog:FrogItem;
+		
+		private var img:Bitmap;
 
 		private const CRAB_LIMIT:int = 120;
 		private const SCREW_SIZE:int = 30;
@@ -62,26 +65,30 @@ package {
 					_scale = 0.6 + Math.random() * 0.2;
 					break;
 				case 5:
-					_scale = 0.2 + Math.random() * 0.2;
+					_scale = 0.1 + Math.random() * 0.1;
 					break;
 			}
 			_scale = Number(_scale.toFixed(2));
 			_scale = scale;
 
-			var bmp:Bitmap = Style.getBitmap("leaf_" + _type, "common", con);
-			bmp.scaleX = bmp.scaleY = _scale;
-			bmp.x = -bmp.width / 2;
-			bmp.y = -bmp.height / 2;
+			img = ResourceManager.getInstance().getImage("assets/other/leaf_" + _type + ".png", null, 0, 0, onLoaded);
 
 			/**青蛙*/
 			if (_type <= 4) {
-				if (Math.random() < 0.3) {
+				if (Math.random() < 0.4) {
 					frog ||= new FrogItem();
 					con.addChild(frog);
 				}
 			}
 		}
 
+		private function onLoaded():void {
+			img.scaleX = img.scaleY = _scale;
+			img.x = -img.width / 2;
+			img.y = -img.height / 2;
+			addChild(img);
+		}
+		
 		public function get type():int {
 			return _type;
 		}
