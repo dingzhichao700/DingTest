@@ -12,13 +12,12 @@ package module {
 
 	public class HomeView extends BaseView {
 
-		private var txt:TextArea;
 		private var btn:Sprite;
 
 		public function HomeView() {
 			LAYER_TYPE = WindowManager.LAYER_BOTTOM;
 			
-			ResourceManager.getInstance().getImage("assets/index.jpg", this, 0, 0);
+			ResourceManager.getInstance().getImage("assets/index00.jpg", this, 0, 0);
 			btn = Style.getBlock(1900, 1060, this, 10, 10);
 			btn.addEventListener(MouseEvent.CLICK, onClick);
 		}

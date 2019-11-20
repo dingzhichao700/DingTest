@@ -1,33 +1,43 @@
 package module.zhengce {
+	import com.greensock.TweenMax;
+	
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-
-	import fl.controls.TextArea;
-
+	
 	import util.BaseView;
-	import util.Utils;
 	import util.WindowManager;
-	import util.XmlManager;
-
+	
 	import utils.ResourceManager;
 	import utils.Style;
-	import utils.cases.ImageButton;
 
 	public class ZhengceMainView extends BaseView {
 
-		private var txt:TextArea;
+		private var btnIndex:Sprite;
 		private var btn1:Sprite;
 		private var btn2:Sprite;
 		private var btn3:Sprite;
 		private var btn4:Sprite;
-		private var btnIndex:Sprite;
+		private var boxCon:Sprite;
+
+		private var btnSelect:Bitmap;
+
+		private var sigebang:SigebangView;
+		private var dangjian:DangjianView;
+		private var lianxi:LianxiView;
+		private var jingji:JingjiView;
 
 		public function ZhengceMainView() {
 			LAYER_TYPE = WindowManager.LAYER_PANEL1;
 
-			ResourceManager.getInstance().getImage("assets/index3_3.jpg", this, 0, 0);
-//			txt = Utils.createTextArea(850, 600, XmlManager.ins.getData(GameConfig.XML_SIGEBANG), this, 140, 230, 25);
-//			txt.setStyle("backgroundColor", "0xffffff"); 
+			ResourceManager.getInstance().getImage("assets/index3.jpg", this);
+			btnSelect = ResourceManager.getInstance().getImage("assets/btn_select.jpg", this, 1499, 670);
+			ResourceManager.getInstance().getImage("assets/btns_3.png", this, 1520, 690);
+
+			boxCon = new Sprite();
+			boxCon.x = 150;
+			boxCon.y = 450;
+			addChild(boxCon);
 
 			btnIndex = Style.getBlock(376, 60, this, 1400, 870);
 			btnIndex.addEventListener(MouseEvent.CLICK, onIndex);
@@ -46,25 +56,55 @@ package module.zhengce {
 		}
 
 		override public function onOpen():void {
-		}
-
-		private function onClick1(e:MouseEvent):void {
-//			close();
-//			MainControl.ins.openZhengce_sigebangView();
-		}
-
-		private function onClick2(e:MouseEvent):void {
-		}
-
-		private function onClick3(e:MouseEvent):void {
-		}
-
-		private function onClick4(e:MouseEvent):void {
+			btnSelect.y = 670;
+			showCon(1);
 		}
 
 		private function onIndex(e:MouseEvent):void {
 			MainControl.ins.openIndex();
 			close();
+		}
+
+		private function onClick1(e:MouseEvent):void {
+			showCon(1);
+		}
+
+		private function onClick2(e:MouseEvent):void {
+			showCon(2);
+		}
+
+		private function onClick3(e:MouseEvent):void {
+			showCon(3);
+		}
+
+		private function onClick4(e:MouseEvent):void {
+			showCon(4);
+		}
+
+		private function showCon(index:int):void {
+			boxCon.removeChildren();
+			var targetY:int = this["btn" + index].y;
+			TweenMax.to(btnSelect, 0.2, {y: targetY});
+			switch (index) {
+				case 1:
+					sigebang ||= new SigebangView();
+					sigebang.x = 30;
+					sigebang.y = 50;
+					boxCon.addChild(sigebang);
+					break;
+				case 2:
+					dangjian ||= new DangjianView();
+					boxCon.addChild(dangjian);
+					break;
+				case 3:
+					lianxi ||= new LianxiView();
+					boxCon.addChild(lianxi);
+					break;
+				case 4:
+					jingji ||= new JingjiView();
+					boxCon.addChild(jingji);
+					break;
+			}
 		}
 
 	}

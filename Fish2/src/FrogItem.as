@@ -5,6 +5,7 @@ package {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
 	
 	import utils.Dispatcher;
@@ -20,18 +21,19 @@ package {
 		
 		private var curIndex:int;
 
-		private var imgBox:Sprite;
 		private var con:Sprite;
 		
 		private const ANI_COF:Array = [["qingwa_stay",80],["qingwa_jump",26]];
 
 		public function FrogItem() {
 			con = new Sprite();
+			con.scaleX = con.scaleY = 1.1;
 			addChild(con);
-			imgBox = new Sprite();
-			con.addChild(imgBox);
+			
+			var filter1:DropShadowFilter = new DropShadowFilter(8, 45, 0, 0.5);
+			this.filters = [filter1];
 
-			img = ResourceManager.getInstance().getImage("", imgBox);
+			img = ResourceManager.getInstance().getImage("", con);
 			curIndex = 1;
 
 			con.addEventListener(MouseEvent.MOUSE_OVER, onOver);
@@ -63,15 +65,17 @@ package {
 		}
 		
 		private function onOver(e:MouseEvent):void {
-			var result:Number = Math.random();
-			if (result < 0.5) { //小概率蛙鸣
-				SoundManager.getInstance().playSound("assets/waming.mp3", false, 0.1 /*, reset*/);
-			} else { //大概率跳走
-				con.removeEventListener(MouseEvent.MOUSE_OVER, onOver);
-				var dis:int = Math.random() * 30 + 200;
-				TweenLite.to(con, 0.5, {y: -dis, onComplete: onJump});
-				playJump();
+			var url:String;
+			if (Math.random() < 0.5) { //小概率蛙鸣
+				url = "assets/waming2.mp3";
+			} else {
+				url = "assets/waming3.mp3";
 			}
+			SoundManager.getInstance().playSound(url, false, 0.8);
+			con.removeEventListener(MouseEvent.MOUSE_OVER, onOver);
+			var dis:int = Math.random() * 30 + 200;
+			TweenLite.to(con, 0.5, {y: -dis, onComplete: onJump});
+			playJump();
 		}
 
 		private function onJump():void {
@@ -89,13 +93,13 @@ package {
 
 		private function onReborn():void {
 			con.y = 130;
-			con.alpha = 0.3
+			con.alpha = 0.3;
 			state = 0;
 			TweenLite.to(con, 1, {y: 0, onComplete: onReborn2});
 		}
 
 		private function onReborn2():void {
-			TweenLite.to(con, 0.2, {alpha: 1});
+			TweenLite.to(con, 0.1, {alpha: 1});
 			reset();
 		}
 

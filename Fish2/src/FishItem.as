@@ -1,11 +1,11 @@
 package {
 	import com.greensock.TweenLite;
-
+	
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.filters.DropShadowFilter;
-
+	
 	import utils.EasyUtils;
 	import utils.LoopManager;
 	import utils.ResourceManager;
@@ -18,7 +18,7 @@ package {
 		private var type:int;
 		/**方向*/
 		private var direction:int;
-		private var _speed:int;
+		private var _speed:Number;
 		/**最大帧数*/
 		private var maxIndex:int;
 		/**当前帧*/
@@ -58,10 +58,10 @@ package {
 		public function get shocked():int {
 			return _shocked;
 		}
-		
+
 		/**初始速度，根据鱼虾类型各有不同*/
-		private function get normalSpeed():int {
-			return type == 7 ? 1 : 5;
+		private function get normalSpeed():Number {
+			return type == 7 ? 1 : (Math.random() * 2 + 1);
 		}
 
 		public function set shocked(value:int):void {
@@ -86,11 +86,11 @@ package {
 		}
 
 		/**速度*/
-		public function get speed():int {
+		public function get speed():Number {
 			return _speed;
 		}
 
-		public function set speed(value:int):void {
+		public function set speed(value:Number):void {
 			_speed = value;
 		}
 

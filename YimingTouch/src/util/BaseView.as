@@ -1,5 +1,6 @@
 package util {
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 
 	public class BaseView extends Sprite {
 
@@ -15,7 +16,7 @@ package util {
 		public function onOpen():void {
 		}
 
-		public function close():void {
+		public function close(e:MouseEvent = null):void {
 			WindowManager.ins.closeWindow(this);
 		}
 		

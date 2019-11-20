@@ -7,10 +7,12 @@ package util {
 		public static const LAYER_BOTTOM:int = 0;
 		public static const LAYER_PANEL1:int = 1;
 		public static const LAYER_PANEL2:int = 2;
+		public static const LAYER_PANEL3:int = 3;
 
 		private var layer_bottom:Sprite;
 		private var layer_panel1:Sprite;
 		private var layer_panel2:Sprite;
+		private var layer_panel3:Sprite;
 
 		private static var _ins:WindowManager;
 
@@ -31,6 +33,9 @@ package util {
 
 			layer_panel2 = new Sprite();
 			stage.addChild(layer_panel2);
+
+			layer_panel3 = new Sprite();
+			stage.addChild(layer_panel3);
 		}
 
 		/**打开窗口*/
@@ -45,6 +50,9 @@ package util {
 					break;
 				case LAYER_PANEL2:
 					targetLayer = layer_panel2;
+					break;
+				case LAYER_PANEL3:
+					targetLayer = layer_panel3;
 					break;
 			}
 			targetLayer.addChild(view);
@@ -63,6 +71,9 @@ package util {
 					break;
 				case LAYER_PANEL2:
 					targetLayer = layer_panel2;
+					break;
+				case LAYER_PANEL3:
+					targetLayer = layer_panel3;
 					break;
 			}
 			if (targetLayer.contains(view)) {
